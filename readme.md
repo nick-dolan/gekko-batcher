@@ -25,6 +25,6 @@ Strategy settings will be taken from toml files.
 
 You need to start Gekko in ui mode also. Go to folder with gekko and typ `node gekko --ui`.
 
-Don't forget to set folder path for gekko!
+Don't forget to set up `gekkoPath` folder path for gekko!
 
 Then just type `node index` in terminal and see process.
