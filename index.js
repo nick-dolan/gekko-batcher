@@ -10,6 +10,7 @@ const upperCaseFirst = require('upper-case-first')
 const chalk = require('chalk');
 const log = console.log;
 const {table} = require('table');
+const fs = require('fs');
 
 let httpConfig = {
     headers: {'Content-Type': 'application/json'},
@@ -154,6 +155,10 @@ let terminalTable = [];
 /*
 * Prepare headers for CSV
 * */
+if (!fs.existsSync('./results')){
+    fs.mkdirSync('./results');
+}
+
 const csvWriter = createCsvWriter({
     path: 'results/results.csv',
     header: [
