@@ -1,0 +1,37 @@
+{
+  "name": "gekko-batcher",
+  "version": "1.0.0",
+  "description": "Backtest batcher for Gekko",
+  "main": "bruteforce.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://gitlab.com/bud-fox/gekko-bruteforce.git"
+  },
+  "keywords": [
+    "gekko",
+    "backtest",
+    "batch",
+    "trading"
+  ],
+  "author": "NZ",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://gitlab.com/bud-fox/gekko-bruteforce/issues"
+  },
+  "homepage": "https://gitlab.com/bud-fox/gekko-bruteforce#readme",
+  "dependencies": {
+    "axios": "^0.18.0",
+    "chalk": "^2.4.1",
+    "csv-writer": "^1.2.0",
+    "is-empty": "^1.2.0",
+    "mathjs": "^5.2.3",
+    "moment": "^2.22.2",
+    "promise-limit": "^2.7.0",
+    "table": "^5.1.0",
+    "toml-require": "^1.1.0",
+    "upper-case-first": "^1.1.2"
+  }
+}
