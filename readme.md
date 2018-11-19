@@ -28,3 +28,7 @@ You need to start Gekko in ui mode also. Go to folder with gekko and typ `node g
 Don't forget to set up `gekkoPath` folder path for gekko!
 
 Then just type `node index` in terminal and see process.
+
+### Sample file output
+
+![image](https://user-images.githubusercontent.com/25667028/48713586-c3ed8800-ec21-11e8-8d78-7ff9adcec05e.png)
