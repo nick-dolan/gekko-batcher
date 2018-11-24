@@ -6,11 +6,13 @@ const createCsvWriter = require('csv-writer').createObjectCsvWriter;
 const moment = require('moment');
 const math = require('mathjs')
 const empty = require('is-empty');
-const upperCaseFirst = require('upper-case-first')
+const upperCaseFirst = require('upper-case-first');
 const chalk = require('chalk');
 const log = console.log;
 const {table} = require('table');
 const fs = require('fs');
+
+let successBacktestCounter = 0;
 
 let httpConfig = {
     headers: {'Content-Type': 'application/json'},
@@ -113,7 +115,7 @@ function getConfig(options, daterange) {
 }
 
 /*
-* Run backtests
+* Collect all settings for batcher
 * */
 let allConfigs = [];
 
@@ -155,7 +157,7 @@ let terminalTable = [];
 /*
 * Prepare headers for CSV
 * */
-if (!fs.existsSync('./results')){
+if (!fs.existsSync('./results')) {
     fs.mkdirSync('./results');
 }
 
@@ -193,22 +195,27 @@ const csvWriter = createCsvWriter({
 /*
 * Run backtests
 * */
-var limit = promiseLimit(parallelQueries);
+let limit = promiseLimit(parallelQueries);
 
 Promise.all(allConfigs.map((config) => {
     return limit(function () {
         return runBacktest(config);
     })
 })).then(results => {
-    log('Finale results:', ':: see full results in csv ::');
+    if (successBacktestCounter > 0) {
+        log('Finale results:', ':: see full results in csv ::');
 
-    terminalTable.unshift(tableHeaders);
+        terminalTable.unshift(tableHeaders);
 
-    terminalTable.sort(function(a, b) {
-        return b[6] > a[6] ? 1 : -1;
-    });
+        terminalTable.sort(function (a, b) {
+            return b[6] > a[6] ? 1 : -1;
+        });
 
-    log(table(terminalTable, tableConfig));
+        log(table(terminalTable, tableConfig));
+    }
+    else {
+        log(chalk.red('There are no any results'));
+    }
 });
 
 function runBacktest(config) {
@@ -224,13 +231,17 @@ function runBacktest(config) {
             let tradingAdvisor = response.data.tradingAdvisor;
             let strategyParameters = response.data.strategyParameters;
             let performanceReport = response.data.performanceReport;
-            let resultLine = [];
+
+            let resultCsvLine = [];
 
             if (empty(tradingAdvisor) || empty(performanceReport)) {
                 log(chalk.red('No trades for:', chalk.dim(`${config.tradingAdvisor.method} ${config.watch.currency.toUpperCase()}/${config.watch.asset.toUpperCase()} ${config.tradingAdvisor.candleSize}/${config.tradingAdvisor.historySize} ${upperCaseFirst(config.watch.exchange)}`)));
                 resolve();
-            } else {
-                resultLine = [{
+            }
+            else {
+                successBacktestCounter++;
+
+                resultCsvLine = [{
                     method: tradingAdvisor.method,
                     market_performance_percent: round(performanceReport.market),
                     relative_profit: round(performanceReport.relativeProfit),
@@ -271,7 +282,7 @@ function runBacktest(config) {
 
                 Promise.resolve()
                     .then(function () {
-                        return csvWriter.writeRecords(resultLine);
+                        return csvWriter.writeRecords(resultCsvLine);
                     })
                     .then(() => {
                         log(chalk.green('Complete:', chalk.dim(`${config.tradingAdvisor.method} ${config.watch.currency.toUpperCase()}/${config.watch.asset.toUpperCase()} ${config.tradingAdvisor.candleSize}/${config.tradingAdvisor.historySize} ${upperCaseFirst(config.watch.exchange)}`)));
