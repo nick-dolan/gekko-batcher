@@ -21,22 +21,15 @@ let httpConfig = {
 };
 
 /*
-* Set preferable ranges for strategy's options
+* Set preferable ranges for method's options
 * */
-let ranges = {
-    interval: generateRange(10, 14),
-    low: generateRange(20, 35),
-    high: generateRange(68, 75),
-    persistence: generateRange(1, 3, 0.5)
-};
+let method = 'RSI';
 
-let RSI = {
-    interval: 14,
-    thresholds: {
-        low: 30,
-        high: 70,
-        persistence: 1
-    }
+let ranges = {
+    interval: generateRange(12, 14),
+    low: generateRange(28, 30),
+    high: generateRange(68, 71),
+    persistence: generateRange(1, 2, 0.5)
 };
 
 /*
@@ -49,12 +42,12 @@ let strategiesConfigPath = gekkoPath + 'config/strategies';
 let candleSizes = [45, 60, 75];
 let historySizes = [10, 15];
 let tradingPairs = [["poloniex", "eth", "zec"], ["poloniex", "eth", "bch"]];
-let methods = ['RSI', 'MACD', 'StochRSI'];
 let daterange = {
     from: '2018-03-19T17:16:00Z',
     to: '2018-06-19T17:16:00Z'
 };
 let parallelQueries = 6;
+let originalMethodConfig = require(`${strategiesConfigPath}/${method}.toml`);
 
 /*
 * Generate all possible combinations of selected ranges
@@ -71,9 +64,9 @@ const combinations = combos(_.mapValues(ranges, function (value) {
 let strategyConfigs = [];
 
 _.forEach(combinations, function (combination) {
-    let obj = _.cloneDeep(RSI);
+    let obj = _.cloneDeep(originalMethodConfig);
 
-    _.eachDeep(RSI, (value, key, path, depth, parent, parentKey, parentPath) => {
+    _.eachDeep(obj, (value, key, path, depth, parent, parentKey, parentPath) => {
         _.forOwn(combination, function (item, name) {
             if (key === name) {
                 obj = addProps(obj, path, +item);
@@ -84,8 +77,6 @@ _.forEach(combinations, function (combination) {
     strategyConfigs.push(obj);
 });
 
-console.log(strategyConfigs);
-
 /*
 * Collect settings
 * */
@@ -94,7 +85,7 @@ let options = [];
 for (let c = 0; c < candleSizes.length; c++) {
     for (let h = 0; h < historySizes.length; h++) {
         for (let t = 0; t < tradingPairs.length; t++) {
-            for (let m = 0; m < methods.length; m++) {
+            for (let s = 0; s < strategyConfigs.length; s++) {
                 let option = {
                     candleSize: candleSizes[c],
                     historySize: historySizes[h],
@@ -103,17 +94,21 @@ for (let c = 0; c < candleSizes.length; c++) {
                         currency: tradingPairs[t][1],
                         asset: tradingPairs[t][2]
                     },
-                    method: methods[m]
+                    method: method
                 };
 
-                /* Get configs for methods from toml files */
-                option[methods[m]] = require(`${strategiesConfigPath}/${methods[m]}.toml`);
+                option[method] = strategyConfigs[s];
 
                 options.push(option);
             }
         }
     }
 }
+
+/*
+* Show the number of combinations
+* */
+log(options.length + ' ' + combinations);
 
 /*
 * Get config for backtest function
@@ -254,7 +249,11 @@ Promise.all(allConfigs.map((config) => {
     })
 })).then(results => {
     if (successBacktestCounter > 0) {
-        log('Finale results:', ':: see full results in csv ::');
+        if (terminalTable.length > 100) {
+            log(chalk.hex('#fafafa').bgHex('#00bf79')('100 most profitale results:'));
+        } else {
+            log(chalk.hex('#fafafa').bgHex('#00bf79')('Results:'));
+        }
 
         terminalTable.unshift(tableHeaders);
 
@@ -262,7 +261,9 @@ Promise.all(allConfigs.map((config) => {
             return b[6] > a[6] ? 1 : -1;
         });
 
-        log(table(terminalTable, tableConfig));
+        log(table(terminalTable.slice(0, 100), tableConfig));
+
+        log(chalk.hex('#fafafa').bgHex('#00bf79')(':: See full results in results/results.csv ::', '\n'));
     }
     else {
         log(chalk.red('There are no any results'));
