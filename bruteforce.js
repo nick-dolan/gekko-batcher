@@ -108,7 +108,7 @@ for (let c = 0; c < candleSizes.length; c++) {
 /*
 * Show the number of combinations
 * */
-log(options.length + ' ' + combinations);
+log(options.length + ' ' + 'combinations');
 
 /*
 * Get config for backtest function
