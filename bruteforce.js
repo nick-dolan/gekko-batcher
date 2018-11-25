@@ -52,7 +52,6 @@ let daterange = {
     to: '2018-06-19T17:16:00Z'
 };
 let parallelQueries = 2;
-let originalMethodConfig = require(`${strategiesConfigPath}/${method}.toml`);
 
 /*
 * Generate all possible combinations of selected ranges
@@ -67,6 +66,7 @@ const combinations = combos(_.mapValues(ranges, function (value) {
 * Prepare strategy config (put all real strategy configs into array)
 * */
 let strategyConfigs = [];
+let originalMethodConfig = require(`${strategiesConfigPath}/${method}.toml`);
 
 _.forEach(combinations, function (combination) {
     let obj = _.cloneDeep(originalMethodConfig);
