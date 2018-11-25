@@ -33,20 +33,25 @@ let ranges = {
 };
 
 /*
+* Shuffle generated combinations of method's configs
+* */
+let shuffle = true;
+
+/*
 * Basic settings
 * */
 let gekkoPath = '../gekko/';
 let apiUrl = "http://localhost:3000";
 let strategiesConfigPath = gekkoPath + 'config/strategies';
 
-let candleSizes = [45, 60, 75];
-let historySizes = [10, 15];
-let tradingPairs = [["poloniex", "eth", "zec"], ["poloniex", "eth", "bch"]];
+let candleSizes = [45];
+let historySizes = [10];
+let tradingPairs = [["poloniex", "eth", "zec"]];
 let daterange = {
     from: '2018-03-19T17:16:00Z',
     to: '2018-06-19T17:16:00Z'
 };
-let parallelQueries = 6;
+let parallelQueries = 2;
 let originalMethodConfig = require(`${strategiesConfigPath}/${method}.toml`);
 
 /*
@@ -76,6 +81,10 @@ _.forEach(combinations, function (combination) {
 
     strategyConfigs.push(obj);
 });
+
+if (shuffle) {
+    strategyConfigs = _.shuffle(strategyConfigs);
+}
 
 /*
 * Collect settings
@@ -251,7 +260,8 @@ Promise.all(allConfigs.map((config) => {
     if (successBacktestCounter > 0) {
         if (terminalTable.length > 100) {
             log(chalk.hex('#fafafa').bgHex('#00bf79')('100 most profitale results:'));
-        } else {
+        }
+        else {
             log(chalk.hex('#fafafa').bgHex('#00bf79')('Results:'));
         }
 
