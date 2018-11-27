@@ -217,7 +217,7 @@ if (!fs.existsSync('./results')) {
 }
 
 const csvWriter = createCsvWriter({
-    path: 'results/results.csv',
+    path: 'results/bruteforce.csv',
     header: [
         {id: 'method', title: 'Method'},
         {id: 'market_performance_percent', title: 'Market performance (%)'},
