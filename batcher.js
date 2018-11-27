@@ -203,7 +203,12 @@ Promise.all(allConfigs.map((config) => {
     })
 })).then(results => {
     if (successBacktestCounter > 0) {
-        log('Finale results:', ':: see full results in csv ::');
+        if (terminalTable.length > 100) {
+            log('100 most profitale results:');
+        }
+        else {
+            log('Results:');
+        }
 
         terminalTable.unshift(tableHeaders);
 
@@ -211,7 +216,9 @@ Promise.all(allConfigs.map((config) => {
             return b[6] > a[6] ? 1 : -1;
         });
 
-        log(table(terminalTable, tableConfig));
+        log(table(terminalTable.slice(0, 100), tableConfig));
+
+        log(chalk.hex('#fafafa').bgHex('#00bf79')('See full results in results/bruteforce.csv'));
     }
     else {
         log(chalk.red('There are no any results'));

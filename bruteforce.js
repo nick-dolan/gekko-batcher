@@ -259,10 +259,10 @@ Promise.all(allConfigs.map((config) => {
 })).then(results => {
     if (successBacktestCounter > 0) {
         if (terminalTable.length > 100) {
-            log(chalk.hex('#fafafa').bgHex('#00bf79')('100 most profitale results:'));
+            log('100 most profitale results:');
         }
         else {
-            log(chalk.hex('#fafafa').bgHex('#00bf79')('Results:'));
+            log('Results:');
         }
 
         terminalTable.unshift(tableHeaders);
@@ -273,7 +273,7 @@ Promise.all(allConfigs.map((config) => {
 
         log(table(terminalTable.slice(0, 100), tableConfig));
 
-        log(chalk.hex('#fafafa').bgHex('#00bf79')(':: See full results in results/results.csv ::', '\n'));
+        log(chalk.hex('#fafafa').bgHex('#00bf79')('See full results in results/bruteforce.csv'));
     }
     else {
         log(chalk.red('There are no any results'));
