@@ -14,7 +14,7 @@ Batch backtest tool for Gekko.
 
 ### Usage
 
-Type `node batcher` in terminal and see process.
+Set up settings and you ready to go. Type `node batcher` in terminal and see process.
 
 You can find csv output in results folder: `/results/batch.csv`
 
@@ -24,7 +24,9 @@ Run all possible parameter combinations for specific method with given ranges.
 
 ### Usage
 
-First steps are the same as for Backtest Batcher. Two things you need to set up `method` and `ranges` in your config file. The name of the property for range must match the property name in method's config. Place properties of method linearly.
+In addition to the other settings specify `method` you want and `ranges` in your config file. 
+
+The name of the property for range must match the property name in method's config. Place properties of method linearly. See example in `sample-config.js`
 
 You can find csv output in results folder: `/results/bruteforce.csv`
 
