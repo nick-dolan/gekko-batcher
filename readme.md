@@ -4,6 +4,8 @@
 
 Firstly you need to install dependencies:  `npm install`. Then start Gekko in ui mod. Go to folder with gekko and type `node gekko --ui`.
 
+Don't forget to create config file from sample-config.js: `cp sample-config.js config.js`
+
 ## Backtest Batcher 
 
 Batch backtest tool for Gekko.
