@@ -10,3 +10,4 @@ npm-debug.log
 .idea
 
 results/*.csv
+config.js

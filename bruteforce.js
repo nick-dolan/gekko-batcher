@@ -1,3 +1,4 @@
+const config = require('./config');
 require('events').EventEmitter.defaultMaxListeners = 100;
 require('toml-require').install();
 const axios = require('axios');
@@ -23,35 +24,34 @@ let httpConfig = {
 /*
 * Set preferable ranges for method's options
 * */
-let method = 'RSI';
+let method = config.method;
 
-let ranges = {
-    interval: generateRange(12, 14),
-    low: generateRange(28, 30),
-    high: generateRange(68, 71),
-    persistence: generateRange(1, 2, 0.5)
-};
+/*
+* Set preferable ranges for method's options
+* */
+let ranges = _.mapValues(config.ranges, function (value) {
+    let params = value.split(":");
+
+    return generateRange(+params[0], +params[2], +params[1]);
+})
 
 /*
 * Shuffle generated combinations of method's configs
 * */
-let shuffle = true;
+let shuffle = config.shuffle;
 
 /*
-* Basic settings
+* Settings
 * */
-let gekkoPath = '../gekko/';
-let apiUrl = "http://localhost:3000";
+let gekkoPath = config.gekkoPath;
+let apiUrl = config.apiUrl;
 let strategiesConfigPath = gekkoPath + 'config/strategies';
 
-let candleSizes = [45];
-let historySizes = [10];
-let tradingPairs = [["poloniex", "eth", "zec"]];
-let daterange = {
-    from: '2018-03-19T17:16:00Z',
-    to: '2018-06-19T17:16:00Z'
-};
-let parallelQueries = 2;
+let candleSizes = config.candleSizes;
+let historySizes = config.historySizes;
+let tradingPairs = config.tradingPairs;
+let daterange = config.daterange;
+let parallelQueries = config.parallelQueries;
 
 /*
 * Generate all possible combinations of selected ranges

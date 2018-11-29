@@ -1,3 +1,4 @@
+const config = require('./config');
 require('events').EventEmitter.defaultMaxListeners = 100;
 require('toml-require').install();
 const axios = require('axios');
@@ -11,6 +12,7 @@ const chalk = require('chalk');
 const log = console.log;
 const {table} = require('table');
 const fs = require('fs');
+const _ = require('lodash');
 
 let successBacktestCounter = 0;
 
@@ -19,21 +21,23 @@ let httpConfig = {
 };
 
 /*
+* Shuffle generated options for backtests
+* */
+let shuffle = config.shuffle;
+
+/*
 * Basic settings
 * */
-let gekkoPath = '../gekko/';
-let apiUrl = "http://localhost:3000";
+let gekkoPath = config.gekkoPath;
+let apiUrl = config.apiUrl;
 let strategiesConfigPath = gekkoPath + 'config/strategies';
 
-let candleSizes = [45, 60, 75];
-let historySizes = [10, 15];
-let tradingPairs = [["poloniex", "eth", "zec"], ["poloniex", "eth", "bch"]];
-let methods = ['RSI', 'MACD', 'StochRSI'];
-let daterange = {
-    from: '2018-03-19T17:16:00Z',
-    to: '2018-06-19T17:16:00Z'
-};
-let parallelQueries = 6;
+let candleSizes = config.candleSizes;
+let historySizes = config.historySizes;
+let tradingPairs = config.tradingPairs;
+let methods = config.methods;
+let daterange = config.daterange;
+let parallelQueries = config.parallelQueries;
 
 /*
 * Collect settings
@@ -63,6 +67,16 @@ for (let c = 0; c < candleSizes.length; c++) {
         }
     }
 }
+
+
+if (shuffle) {
+    options = _.shuffle(options);
+}
+
+/*
+* Show complete number of combinations
+* */
+log(options.length + ' ' + 'combinations');
 
 /*
 * Get config for backtest function
@@ -162,7 +176,7 @@ if (!fs.existsSync('./results')) {
 }
 
 const csvWriter = createCsvWriter({
-    path: 'results/results.csv',
+    path: 'results/batch.csv',
     header: [
         {id: 'method', title: 'Method'},
         {id: 'market_performance_percent', title: 'Market performance (%)'},
@@ -218,7 +232,7 @@ Promise.all(allConfigs.map((config) => {
 
         log(table(terminalTable.slice(0, 100), tableConfig));
 
-        log(chalk.hex('#fafafa').bgHex('#00bf79')('See full results in results/bruteforce.csv'));
+        log(chalk.hex('#fafafa').bgHex('#00bf79')('See full results in results/batch.csv'));
     }
     else {
         log(chalk.red('There are no any results'));
