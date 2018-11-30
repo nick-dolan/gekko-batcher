@@ -1,6 +1,6 @@
 const config = require('./config');
+const util = require('./util');
 require('events').EventEmitter.defaultMaxListeners = 100;
-require('toml-require').install();
 const axios = require('axios');
 const promiseLimit = require('promise-limit');
 const createCsvWriter = require('csv-writer').createObjectCsvWriter;
@@ -66,7 +66,7 @@ const combinations = combos(_.mapValues(ranges, function (value) {
 * Prepare strategy config (put all real strategy configs into array)
 * */
 let strategyConfigs = [];
-let originalMethodConfig = require(`${strategiesConfigPath}/${method}.toml`);
+let originalMethodConfig = util.getTOML(`${strategiesConfigPath}/${method}.toml`);
 
 _.forEach(combinations, function (combination) {
     let obj = _.cloneDeep(originalMethodConfig);

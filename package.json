@@ -33,7 +33,7 @@
     "moment": "^2.22.2",
     "promise-limit": "^2.7.0",
     "table": "^5.1.0",
-    "toml-require": "^1.1.0",
+    "toml": "^2.3.3",
     "upper-case-first": "^1.1.2"
   }
 }

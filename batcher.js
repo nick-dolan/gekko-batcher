@@ -1,6 +1,6 @@
 const config = require('./config');
+const util = require('./util');
 require('events').EventEmitter.defaultMaxListeners = 100;
-require('toml-require').install();
 const axios = require('axios');
 const promiseLimit = require('promise-limit');
 const createCsvWriter = require('csv-writer').createObjectCsvWriter;
@@ -60,7 +60,7 @@ for (let c = 0; c < candleSizes.length; c++) {
                 };
 
                 /* Get configs for methods from toml files */
-                option[methods[m]] = require(`${strategiesConfigPath}/${methods[m]}.toml`);
+                option[methods[m]] = util.getTOML(`${strategiesConfigPath}/${methods[m]}.toml`);
 
                 options.push(option);
             }
