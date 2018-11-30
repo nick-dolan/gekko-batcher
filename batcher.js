@@ -5,7 +5,7 @@ const axios = require('axios');
 const promiseLimit = require('promise-limit');
 const createCsvWriter = require('csv-writer').createObjectCsvWriter;
 const moment = require('moment');
-const math = require('mathjs')
+const math = require('mathjs');
 const empty = require('is-empty');
 const upperCaseFirst = require('upper-case-first');
 const chalk = require('chalk');
@@ -264,13 +264,13 @@ function runBacktest(config) {
 
                 resultCsvLine = [{
                     method: tradingAdvisor.method,
-                    market_performance_percent: round(performanceReport.market),
-                    relative_profit: round(performanceReport.relativeProfit),
-                    profit: round(performanceReport.profit),
+                    market_performance_percent: util.round(performanceReport.market),
+                    relative_profit: util.round(performanceReport.relativeProfit),
+                    profit: util.round(performanceReport.profit),
                     run_date: moment().utc().format('ll'),
                     run_time: moment().utc().format('LT'),
-                    start_date: humanizeDate(performanceReport.startTime),
-                    end_date: humanizeDate(performanceReport.endTime),
+                    start_date: util.humanizeDate(performanceReport.startTime),
+                    end_date: util.humanizeDate(performanceReport.endTime),
                     currency_pair: (market.currency + '/' + market.asset).toUpperCase(),
                     candle_size: tradingAdvisor.candleSize,
                     history_size: tradingAdvisor.historySize,
@@ -278,16 +278,16 @@ function runBacktest(config) {
                     asset: market.asset.toUpperCase(),
                     exchange: market.exchange,
                     timespan: performanceReport.timespan,
-                    yearly_profit: round(performanceReport.relativeProfit),
-                    yearly_profit_percent: round(performanceReport.yearlyProfit),
+                    yearly_profit: util.round(performanceReport.relativeProfit),
+                    yearly_profit_percent: util.round(performanceReport.yearlyProfit),
                     start_price: performanceReport.startPrice,
                     end_price: performanceReport.endPrice,
                     trades: performanceReport.trades,
                     start_balance: performanceReport.startBalance,
-                    sharpe: round(performanceReport.sharpe, 3),
-                    alpha: round(performanceReport.alpha, 3),
+                    sharpe: util.round(performanceReport.sharpe, 3),
+                    alpha: util.round(performanceReport.alpha, 3),
                     config: JSON.stringify(strategyParameters),
-                    downside: round(performanceReport.downside, 3)
+                    downside: util.round(performanceReport.downside, 3)
                 }];
 
                 terminalTable.push([
@@ -297,8 +297,8 @@ function runBacktest(config) {
                     tradingAdvisor.candleSize,
                     tradingAdvisor.historySize,
                     market.exchange,
-                    round(performanceReport.relativeProfit),
-                    round(performanceReport.market)
+                    util.round(performanceReport.relativeProfit),
+                    util.round(performanceReport.market)
                 ])
 
                 Promise.resolve()
@@ -314,22 +314,4 @@ function runBacktest(config) {
             log(error);
         })
     })
-}
-
-/*
-* Format Date, example: November 2, 2018 2:34 PM
-* */
-function humanizeDate(date) {
-    return moment(date).format('lll');
-}
-
-/*
-* Round number
-* */
-function round(number, precision) {
-    if (!precision) {
-        precision = 2
-    }
-
-    return math.round(+number, precision);
 }

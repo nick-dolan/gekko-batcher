@@ -4,8 +4,7 @@ require('events').EventEmitter.defaultMaxListeners = 100;
 const axios = require('axios');
 const promiseLimit = require('promise-limit');
 const createCsvWriter = require('csv-writer').createObjectCsvWriter;
-const moment = require('moment');
-const math = require('mathjs')
+const math = require('mathjs');
 const empty = require('is-empty');
 const upperCaseFirst = require('upper-case-first');
 const chalk = require('chalk');
@@ -14,6 +13,7 @@ const {table} = require('table');
 const fs = require('fs');
 const combos = require('combos');
 const _ = require('deepdash')(require('lodash'));
+const moment = require('moment');
 
 let successBacktestCounter = 0;
 
@@ -32,8 +32,8 @@ let method = config.method;
 let ranges = _.mapValues(config.ranges, function (value) {
     let params = value.split(":");
 
-    return generateRange(+params[0], +params[2], +params[1]);
-})
+    return util.generateRange(+params[0], +params[2], +params[1]);
+});
 
 /*
 * Shuffle generated combinations of method's configs
@@ -57,7 +57,7 @@ let parallelQueries = config.parallelQueries;
 * Generate all possible combinations of selected ranges
 * */
 const combinations = combos(_.mapValues(ranges, function (value) {
-    if (isMatrix(value)) {
+    if (util.isMatrix(value)) {
         return value._data;
     }
 }));
@@ -74,7 +74,7 @@ _.forEach(combinations, function (combination) {
     _.eachDeep(obj, (value, key, path, depth, parent, parentKey, parentPath) => {
         _.forOwn(combination, function (item, name) {
             if (key === name) {
-                obj = addProps(obj, path, +item);
+                obj = util.addProps(obj, path, +item);
             }
         });
     });
@@ -305,13 +305,13 @@ function runBacktest(config) {
 
                 resultCsvLine = [{
                     method: tradingAdvisor.method,
-                    market_performance_percent: round(performanceReport.market),
-                    relative_profit: round(performanceReport.relativeProfit),
-                    profit: round(performanceReport.profit),
+                    market_performance_percent: util.round(performanceReport.market),
+                    relative_profit: util.round(performanceReport.relativeProfit),
+                    profit: util.round(performanceReport.profit),
                     run_date: moment().utc().format('ll'),
                     run_time: moment().utc().format('LT'),
-                    start_date: humanizeDate(performanceReport.startTime),
-                    end_date: humanizeDate(performanceReport.endTime),
+                    start_date: util.humanizeDate(performanceReport.startTime),
+                    end_date: util.humanizeDate(performanceReport.endTime),
                     currency_pair: (market.currency + '/' + market.asset).toUpperCase(),
                     candle_size: tradingAdvisor.candleSize,
                     history_size: tradingAdvisor.historySize,
@@ -319,16 +319,16 @@ function runBacktest(config) {
                     asset: market.asset.toUpperCase(),
                     exchange: market.exchange,
                     timespan: performanceReport.timespan,
-                    yearly_profit: round(performanceReport.relativeProfit),
-                    yearly_profit_percent: round(performanceReport.yearlyProfit),
+                    yearly_profit: util.round(performanceReport.relativeProfit),
+                    yearly_profit_percent: util.round(performanceReport.yearlyProfit),
                     start_price: performanceReport.startPrice,
                     end_price: performanceReport.endPrice,
                     trades: performanceReport.trades,
                     start_balance: performanceReport.startBalance,
-                    sharpe: round(performanceReport.sharpe, 3),
-                    alpha: round(performanceReport.alpha, 3),
+                    sharpe: util.round(performanceReport.sharpe, 3),
+                    alpha: util.round(performanceReport.alpha, 3),
                     config: JSON.stringify(strategyParameters),
-                    downside: round(performanceReport.downside, 3)
+                    downside: util.round(performanceReport.downside, 3)
                 }];
 
                 terminalTable.push([
@@ -338,8 +338,8 @@ function runBacktest(config) {
                     tradingAdvisor.candleSize,
                     tradingAdvisor.historySize,
                     market.exchange,
-                    round(performanceReport.relativeProfit),
-                    round(performanceReport.market)
+                    util.round(performanceReport.relativeProfit),
+                    util.round(performanceReport.market)
                 ])
 
                 Promise.resolve()
@@ -355,87 +355,4 @@ function runBacktest(config) {
             log(error);
         })
     })
-}
-
-/*
-* Format Date, example: November 2, 2018 2:34 PM
-* */
-function humanizeDate(date) {
-    return moment(date).format('lll');
-}
-
-/*
-* Round number
-* */
-function round(number, precision) {
-    if (!precision) {
-        precision = 2
-    }
-
-    return math.round(+number, precision);
-}
-
-function generateRange(start, end, step) {
-    if (step && end) {
-        let arr = math.range(start, end, step, true);
-
-        return arr.map(function (number) {
-            return number.toFixed(countDecimals(step))
-        });
-    }
-    else {
-        return math.range(start, end, 1, true);
-    }
-}
-
-/*
-* Automatically create-object if undefined with path
-* */
-function addProps(obj, arr, val) {
-    if (typeof arr == 'string') {
-        arr = arr.split(".");
-    }
-
-    obj[arr[0]] = obj[arr[0]] || {};
-
-    var tmpObj = obj[arr[0]];
-
-    if (arr.length > 1) {
-        arr.shift();
-
-        addProps(tmpObj, arr, val);
-    }
-    else {
-        obj[arr[0]] = val;
-    }
-
-    return obj;
-}
-
-/*
-* Count decimals of number
-* */
-function countDecimals(a) {
-    if (!isFinite(a)) {
-        return 0;
-    }
-
-    var e = 1,
-        p = 0;
-
-    while (Math.round(a * e) / e !== a) {
-        e *= 10;
-        p++;
-    }
-
-    return p;
-}
-
-/*
-* Check if type object is Matrix
-* */
-function isMatrix(v) {
-    if (v) {
-        return math.typeof(v) === 'Matrix';
-    }
 }
