@@ -6,7 +6,6 @@ const promiseLimit = require('promise-limit');
 const createCsvWriter = require('csv-writer').createObjectCsvWriter;
 const moment = require('moment');
 const math = require('mathjs');
-const empty = require('is-empty');
 const upperCaseFirst = require('upper-case-first');
 const chalk = require('chalk');
 const log = console.log;
@@ -256,7 +255,7 @@ function runBacktest(config) {
 
             let resultCsvLine = [];
 
-            if (empty(tradingAdvisor) || empty(performanceReport)) {
+            if (_.isEmpty(tradingAdvisor) || _.isEmpty(performanceReport)) {
                 log(chalk.red('No trades for:', chalk.dim(`${config.tradingAdvisor.method} ${config.watch.currency.toUpperCase()}/${config.watch.asset.toUpperCase()} ${config.tradingAdvisor.candleSize}/${config.tradingAdvisor.historySize} ${upperCaseFirst(config.watch.exchange)}`)));
                 resolve();
             }

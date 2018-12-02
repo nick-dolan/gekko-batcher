@@ -28,7 +28,6 @@
     "combos": "^0.2.0",
     "csv-writer": "^1.2.0",
     "deepdash": "^1.5.1",
-    "is-empty": "^1.2.0",
     "mathjs": "^5.2.3",
     "moment": "^2.22.2",
     "promise-limit": "^2.7.0",
