@@ -73,7 +73,7 @@ _.forEach(combinations, function (combination) {
     _.eachDeep(obj, (value, key, path, depth, parent, parentKey, parentPath) => {
         _.forOwn(combination, function (item, name) {
             if (key === name) {
-                obj = util.addProps(obj, path, +item);
+                obj = _.set(obj, path, +item);
             }
         });
     });

@@ -48,27 +48,6 @@ const util = {
             return math.typeof(v) === 'Matrix';
         }
     },
-    // Automatically create-object with path if undefined
-    addProps: function (obj, arr, val) {
-        if (typeof arr == 'string') {
-            arr = arr.split(".");
-        }
-
-        obj[arr[0]] = obj[arr[0]] || {};
-
-        var tmpObj = obj[arr[0]];
-
-        if (arr.length > 1) {
-            arr.shift();
-
-            this.addProps(tmpObj, arr, val);
-        }
-        else {
-            obj[arr[0]] = val;
-        }
-
-        return obj;
-    },
     // Format Date. Result: November 2, 2018 2:34 PM
     humanizeDate: function (date) {
         return moment(date).format('lll');
