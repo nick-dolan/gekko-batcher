@@ -351,7 +351,13 @@ function runBacktest(config) {
                     });
             }
         }).catch(function (error) {
-            log(error);
+            if (error.code === 'ECONNREFUSED') {
+               log('Gekko isn\'t running probably. Go to Gekko\'s folder and type: node gekko --ui');
+
+                process.exit(0);
+            } else {
+                log(error);
+            }
         })
     })
 }
