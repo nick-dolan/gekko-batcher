@@ -10,8 +10,6 @@ config.apiUrl = "http://localhost:3000";
 
 config.parallelQueries = 4;
 
-// Settings that use both tools
-
 config.candleSizes = [45, 60, 75];
 
 config.historySizes = [10, 15];
@@ -26,6 +24,14 @@ config.daterange = {
     from: '2018-03-19T17:16:00Z',
     to: '2018-06-19T17:16:00Z'
 };
+
+// Where to get method's settings.
+// The first has high priority. Then second, if there's no settings in first place and so on.
+
+// batcher – strategy settings below here
+// gekko – gekko's config.js
+// toml.js – gekko's toml files
+config.configPriorityLocations = ['batcher', 'gekko', 'gekko-toml'];
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 //                          BACKTEST BATCHER
@@ -50,6 +56,19 @@ config.ranges = {
     low: '28:1:30',
     high: '68:1:72',
     persistence: '1:0.5:2'
+};
+
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+//                          STRATEGY SETTINGS
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+config.RSI = {
+    interval: 15,
+    thresholds: {
+        low: 25,
+        high: 75,
+        persistence: 1
+    }
 };
 
 module.exports = config;
