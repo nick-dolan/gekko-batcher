@@ -1,7 +1,16 @@
 const fs = require('fs');
+const _ = require('lodash');
 const toml = require('toml');
 const math = require('mathjs');
 const moment = require('moment');
+const config = require('./config');
+
+const tomlConfigPath = config.gekkoPath + 'config/strategies';
+let gekkoConfig = {};
+
+if (fs.existsSync(config.gekkoPath + 'config.js')) {
+    gekkoConfig = require(config.gekkoPath + 'config.js');
+}
 
 /*
 * Helper functions
@@ -76,6 +85,42 @@ const util = {
         else {
             return math.range(start, end, 1, true);
         }
+    },
+    getMethodSettingsByLocation: function (name, location) {
+        if (location === 'batcher') {
+            if (!_.isEmpty(config[name])) {
+                return config[name];
+            }
+        }
+        else if (location === 'gekko') {
+            if (!_.isEmpty(gekkoConfig[name])) {
+                return gekkoConfig[name];
+            }
+        }
+        else if (location === 'gekko-toml') {
+            return util.getTOML(`${tomlConfigPath}/${name}.toml`);
+        }
+        else {
+            console.log('There is no such config\'s location as ' + location);
+        }
+    },
+    getMethodSettingsByPriority: function (name, locations) {
+        let result = {};
+
+        _.forEach(locations, function (location) {
+            let config = util.getMethodSettingsByLocation(name, location);
+
+            if (!_.isEmpty(config)) {
+                result = {
+                    location: location,
+                    settings: config
+                }
+
+                return false;
+            }
+        })
+
+        return result;
     }
 }
 

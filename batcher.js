@@ -30,8 +30,6 @@ let shuffle = config.shuffle;
 * */
 let gekkoPath = config.gekkoPath;
 let apiUrl = config.apiUrl;
-let strategiesConfigPath = gekkoPath + 'config/strategies';
-
 let candleSizes = config.candleSizes;
 let historySizes = config.historySizes;
 let tradingPairs = config.tradingPairs;
@@ -48,6 +46,8 @@ for (let c = 0; c < candleSizes.length; c++) {
     for (let h = 0; h < historySizes.length; h++) {
         for (let t = 0; t < tradingPairs.length; t++) {
             for (let m = 0; m < methods.length; m++) {
+                const methodConfig = util.getMethodSettingsByPriority(methods[m], config.configPriorityLocations);
+
                 let option = {
                     candleSize: candleSizes[c],
                     historySize: historySizes[h],
@@ -56,18 +56,17 @@ for (let c = 0; c < candleSizes.length; c++) {
                         currency: tradingPairs[t][1],
                         asset: tradingPairs[t][2]
                     },
-                    method: methods[m]
+                    method: methods[m],
+                    settingsLocation: methodConfig.location
                 };
 
-                /* Get configs for methods from toml files */
-                option[methods[m]] = util.getTOML(`${strategiesConfigPath}/${methods[m]}.toml`);
+                option[methods[m]] = methodConfig.settings;
 
                 options.push(option);
             }
         }
     }
 }
-
 
 if (shuffle) {
     options = _.shuffle(options);
@@ -124,7 +123,8 @@ function getConfig(options, daterange) {
             "riskFreeReturn": 2,
             "enabled": true
         },
-        "valid": true
+        "valid": true,
+        "settingsLocation": options.settingsLocation
     };
 }
 
@@ -203,6 +203,7 @@ const csvWriter = createCsvWriter({
         {id: 'alpha', title: 'Alpha'},
         {id: 'config', title: 'Config'},
         {id: 'downside', title: 'Downside'},
+        {id: 'settings_location', title: 'Method\'s settings location'},
     ]
 });
 
@@ -287,7 +288,8 @@ function runBacktest(config) {
                     sharpe: util.round(performanceReport.sharpe, 3),
                     alpha: util.round(performanceReport.alpha, 3),
                     config: JSON.stringify(strategyParameters),
-                    downside: util.round(performanceReport.downside, 3)
+                    downside: util.round(performanceReport.downside, 3),
+                    settings_location: config.settingsLocation
                 }];
 
                 terminalTable.push([

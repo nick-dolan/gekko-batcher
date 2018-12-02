@@ -1,6 +1,6 @@
 const config = require('./config');
 const util = require('./util');
-require('events').EventEmitter.defaultMaxListeners = 100;
+require('events').EventEmitter.defaultMaxListeners = 200;
 const axios = require('axios');
 const promiseLimit = require('promise-limit');
 const createCsvWriter = require('csv-writer').createObjectCsvWriter;
@@ -45,7 +45,7 @@ let shuffle = config.shuffle;
 * */
 let gekkoPath = config.gekkoPath;
 let apiUrl = config.apiUrl;
-let strategiesConfigPath = gekkoPath + 'config/strategies';
+let tomlConfigPath = gekkoPath + 'config/strategies';
 
 let candleSizes = config.candleSizes;
 let historySizes = config.historySizes;
@@ -66,10 +66,10 @@ const combinations = combos(_.mapValues(ranges, function (value) {
 * Prepare strategy config (put all real strategy configs into array)
 * */
 let strategyConfigs = [];
-let originalMethodConfig = util.getTOML(`${strategiesConfigPath}/${method}.toml`);
+let methodSettings = util.getMethodSettingsByPriority(method, config.configPriorityLocations);
 
 _.forEach(combinations, function (combination) {
-    let obj = _.cloneDeep(originalMethodConfig);
+    let obj = _.cloneDeep(methodSettings.settings);
 
     _.eachDeep(obj, (value, key, path, depth, parent, parentKey, parentPath) => {
         _.forOwn(combination, function (item, name) {
