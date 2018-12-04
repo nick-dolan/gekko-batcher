@@ -77,63 +77,12 @@ if (shuffle) {
 log(options.length + ' ' + 'combinations');
 
 /*
-* Get config for backtest function
-* */
-function getConfig(options, daterange) {
-    return {
-        "watch": {
-            "exchange": options.tradingPair.exchange,
-            "currency": options.tradingPair.currency,
-            "asset": options.tradingPair.asset
-        },
-        "paperTrader": {
-            "feeMaker": 0.25,
-            "feeTaker": 0.25,
-            "feeUsing": "maker",
-            "slippage": 0.05,
-            "simulationBalance": {"asset": 1, "currency": 100},
-            "reportRoundtrips": true,
-            "enabled": true
-        },
-        "tradingAdvisor": {
-            "enabled": true,
-            "method": options.method,
-            "candleSize": options.candleSize,
-            "historySize": options.historySize
-        },
-        "backtest": {
-            "daterange": {
-                "from": daterange.from,
-                "to": daterange.to
-            }
-        },
-        "backtestResultExporter": {
-            "enabled": true,
-            "writeToDisk": false,
-            "data": {
-                "stratUpdates": false,
-                "roundtrips": false,
-                "stratCandles": false,
-                "stratCandleProps": ["open"],
-                "trades": false
-            }
-        },
-        "performanceAnalyzer": {
-            "riskFreeReturn": 2,
-            "enabled": true
-        },
-        "valid": true,
-        "settingsLocation": options.settingsLocation
-    };
-}
-
-/*
 * Collect all settings for batcher
 * */
 let allConfigs = [];
 
 for (let o = 0; o < options.length; o++) {
-    let backtestConfig = getConfig(options[o], daterange);
+    let backtestConfig = util.getConfig(options[o], daterange);
 
     backtestConfig[options[o].method] = options[o][options[o].method];
 
@@ -312,7 +261,13 @@ function runBacktest(config) {
                     });
             }
         }).catch(function (error) {
-            log(error);
+            if (error.code === 'ECONNREFUSED') {
+                log('Gekko isn\'t running probably. Go to Gekko\'s folder and type: node gekko --ui');
+
+                process.exit(0);
+            } else {
+                log(error);
+            }
         })
     })
 }
