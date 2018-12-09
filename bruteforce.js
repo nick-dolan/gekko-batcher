@@ -21,8 +21,7 @@ momentDurationFormatSetup(moment);
 
 let backtestCounter = 0;
 let successBacktestCounter = 0;
-let backtestCompletedCounter = 0;
-let remainingTime = 0;
+let completedBacktestCounter = 0;
 let spentTime = 0;
 
 let httpConfig = {
@@ -240,25 +239,6 @@ Promise.all(allConfigs.map((config) => {
     }
 });
 
-function countRemainingTime(n = 10) {
-    if (backtestCompletedCounter % n === 0) {
-        let stepsCompleted = backtestCompletedCounter / n;
-        let remainingBacktests = options.length - backtestCompletedCounter;
-        let stepsRemaining = remainingBacktests / n;
-        let spentTimeReal = spentTime / parallelQueries;
-
-        if (stepsCompleted === 1) {
-            remainingTime = stepsRemaining * spentTimeReal;
-        }
-        else if (stepsCompleted > 1) {
-            remainingTime = stepsRemaining * spentTimeReal / stepsCompleted;
-        }
-
-        log('Spent time:', moment.duration(spentTimeReal).format("d [days], h [hours], m [minutes], s [seconds]"));
-        log('Approximately remaining time:', moment.duration(remainingTime).format("d [days], h [hours], m [minutes], s [seconds]"), `(${moment.duration(remainingTime).humanize()})`);
-    }
-}
-
 function runBacktest(config) {
     backtestCounter++;
 
@@ -285,13 +265,11 @@ function runBacktest(config) {
             if (_.isEmpty(tradingAdvisor) || _.isEmpty(performanceReport)) {
                 log(chalk.red('No trades for:', chalk.dim(`${config.tradingAdvisor.method} ${config.watch.currency.toUpperCase()}/${config.watch.asset.toUpperCase()} ${config.tradingAdvisor.candleSize}/${config.tradingAdvisor.historySize} ${upperCaseFirst(config.watch.exchange)}`)));
 
-                backtestCompletedCounter++;
+                completedBacktestCounter++;
 
-                duration = marky.stop(backtestId).duration;
+                spentTime += marky.stop(backtestId).duration;
 
-                spentTime += duration;
-
-                countRemainingTime();
+                util.countRemainingTime(completedBacktestCounter, options.length, spentTime);
 
                 resolve();
             }
@@ -344,13 +322,11 @@ function runBacktest(config) {
                     .then(() => {
                         log(chalk.green('Complete:', chalk.dim(`${config.tradingAdvisor.method} ${config.watch.currency.toUpperCase()}/${config.watch.asset.toUpperCase()} ${config.tradingAdvisor.candleSize}/${config.tradingAdvisor.historySize} ${upperCaseFirst(config.watch.exchange)}`)));
 
-                        backtestCompletedCounter++;
+                        completedBacktestCounter++;
 
-                        duration = marky.stop(backtestId).duration;
+                        spentTime += marky.stop(backtestId).duration;
 
-                        spentTime += duration;
-
-                        countRemainingTime();
+                        util.countRemainingTime(completedBacktestCounter, options.length, spentTime);
 
                         resolve();
                     });

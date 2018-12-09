@@ -1,9 +1,12 @@
+const log = console.log;
 const fs = require('fs');
 const _ = require('lodash');
 const toml = require('toml');
 const math = require('mathjs');
 const moment = require('moment');
 const config = require('./config');
+const momentDurationFormatSetup = require("moment-duration-format");
+momentDurationFormatSetup(moment);
 
 const tomlConfigPath = config.gekkoPath + 'config/strategies';
 let gekkoConfig = {};
@@ -80,7 +83,7 @@ const util = {
             return util.getTOML(`${tomlConfigPath}/${name}.toml`);
         }
         else {
-            console.log('There is no such config\'s location as ' + location);
+            log('There is no such config\'s location as ' + location);
         }
     },
     getMethodSettingsByPriority: function (name, locations) {
@@ -101,7 +104,25 @@ const util = {
 
         return result;
     },
-    // Get config for backtest
+    countRemainingTime: function (completedBacktests, allBacktests, spentTime, step = 10) {
+        if (completedBacktests % step === 0) {
+            let stepsCompleted = completedBacktests / step;
+            let remainingBacktests = allBacktests - completedBacktests;
+            let stepsRemaining = remainingBacktests / step;
+            let spentTimeReal = spentTime / config.parallelQueries;
+            let remainingTime = 0;
+
+            if (stepsCompleted === 1) {
+                remainingTime = stepsRemaining * spentTimeReal;
+            }
+            else if (stepsCompleted > 1) {
+                remainingTime = stepsRemaining * spentTimeReal / stepsCompleted;
+            }
+
+            log('Spent time:', moment.duration(spentTimeReal).format("d [days], h [hours], m [minutes], s [seconds]"));
+            log('Approximately remaining time:', moment.duration(remainingTime).format("d [days], h [hours], m [minutes], s [seconds]"), `(${moment.duration(remainingTime).humanize()})`);
+        }
+    },
     getConfig: function (options, daterange) {
         return {
             "watch": {
