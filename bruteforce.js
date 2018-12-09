@@ -13,8 +13,17 @@ const fs = require('fs');
 const combos = require('combos');
 const _ = require('deepdash')(require('lodash'));
 const moment = require('moment');
+var marky = require('marky');
+var uniqid = require('uniqid');
+var momentDurationFormatSetup = require("moment-duration-format");
 
+momentDurationFormatSetup(moment);
+
+let backtestCounter = 0;
 let successBacktestCounter = 0;
+let backtestCompletedCounter = 0;
+let remainingTime = 0;
+let spentTime = 0;
 
 let httpConfig = {
     headers: {'Content-Type': 'application/json'},
@@ -229,7 +238,33 @@ Promise.all(allConfigs.map((config) => {
     }
 });
 
+function countRemainingTime(n = 5) {
+    if (backtestCompletedCounter % n === 0) {
+        let stepsCompleted = backtestCompletedCounter / n;
+        let remainingBacktests = options.length - backtestCompletedCounter;
+        let stepsRemaining = remainingBacktests / n;
+        let spentTimeReal = spentTime / parallelQueries;
+
+        if (stepsCompleted === 1) {
+            remainingTime = stepsRemaining * spentTimeReal;
+        }
+        else if (stepsCompleted > 1) {
+            remainingTime = stepsRemaining * spentTimeReal / stepsCompleted;
+        }
+
+        log('Spent time:', moment.duration(spentTimeReal).format("d [days], h [hours], m [minutes], s [seconds]"));
+        log('Approximately remaining time:', moment.duration(remainingTime).format("d [days], h [hours], m [minutes], s [seconds]"), `(${moment.duration(remainingTime).humanize()})`);
+    }
+}
+
 function runBacktest(config) {
+    backtestCounter++;
+
+    let backtestId = backtestCounter + '_' + uniqid();
+    let duration = 0;
+
+    marky.mark(backtestId);
+
     log(chalk.cyan('Started:', chalk.dim(`${config.tradingAdvisor.method} ${config.watch.currency.toUpperCase()}/${config.watch.asset.toUpperCase()} ${config.tradingAdvisor.candleSize}/${config.tradingAdvisor.historySize} ${upperCaseFirst(config.watch.exchange)}`)));
 
     process.on('unhandledRejection', (reason, promise) => {
@@ -247,6 +282,15 @@ function runBacktest(config) {
 
             if (_.isEmpty(tradingAdvisor) || _.isEmpty(performanceReport)) {
                 log(chalk.red('No trades for:', chalk.dim(`${config.tradingAdvisor.method} ${config.watch.currency.toUpperCase()}/${config.watch.asset.toUpperCase()} ${config.tradingAdvisor.candleSize}/${config.tradingAdvisor.historySize} ${upperCaseFirst(config.watch.exchange)}`)));
+
+                backtestCompletedCounter++;
+
+                duration = marky.stop(backtestId).duration;
+
+                spentTime += duration;
+
+                countRemainingTime();
+
                 resolve();
             }
             else {
@@ -297,15 +341,25 @@ function runBacktest(config) {
                     })
                     .then(() => {
                         log(chalk.green('Complete:', chalk.dim(`${config.tradingAdvisor.method} ${config.watch.currency.toUpperCase()}/${config.watch.asset.toUpperCase()} ${config.tradingAdvisor.candleSize}/${config.tradingAdvisor.historySize} ${upperCaseFirst(config.watch.exchange)}`)));
+
+                        backtestCompletedCounter++;
+
+                        duration = marky.stop(backtestId).duration;
+
+                        spentTime += duration;
+
+                        countRemainingTime();
+
                         resolve();
                     });
             }
         }).catch(function (error) {
             if (error.code === 'ECONNREFUSED') {
-               log('Gekko isn\'t running probably. Go to Gekko\'s folder and type: node gekko --ui');
+                log('Gekko isn\'t running probably. Go to Gekko\'s folder and type: node gekko --ui');
 
                 process.exit(0);
-            } else {
+            }
+            else {
                 log(error);
             }
         })

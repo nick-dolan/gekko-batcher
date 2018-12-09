@@ -28,11 +28,14 @@
     "combos": "^0.2.0",
     "csv-writer": "^1.2.0",
     "deepdash": "^1.5.1",
+    "marky": "^1.2.1",
     "mathjs": "^5.2.3",
     "moment": "^2.22.2",
+    "moment-duration-format": "^2.2.2",
     "promise-limit": "^2.7.0",
     "table": "^5.1.0",
     "toml": "^2.3.3",
+    "uniqid": "^5.0.3",
     "upper-case-first": "^1.1.2"
   }
 }
