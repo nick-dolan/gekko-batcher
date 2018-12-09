@@ -216,6 +216,8 @@ Promise.all(allConfigs.map((config) => {
     })
 })).then(results => {
     if (successBacktestCounter > 0) {
+        log('Process has been finished. Spent time: ', moment.duration(spentTime / parallelQueries).format("d [days], h [hours], m [minutes], s [seconds]"));
+
         if (terminalTable.length > 100) {
             log('100 most profitale results:');
         }
