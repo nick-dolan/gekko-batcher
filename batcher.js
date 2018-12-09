@@ -12,9 +12,9 @@ const log = console.log;
 const {table} = require('table');
 const fs = require('fs');
 const _ = require('lodash');
-var marky = require('marky');
-var uniqid = require('uniqid');
-var momentDurationFormatSetup = require("moment-duration-format");
+const marky = require('marky');
+const uniqid = require('uniqid');
+const momentDurationFormatSetup = require("moment-duration-format");
 
 momentDurationFormatSetup(moment);
 
@@ -200,7 +200,7 @@ Promise.all(allConfigs.map((config) => {
     }
 });
 
-function countRemainingTime(n = 5) {
+function countRemainingTime(n = 10) {
     if (backtestCompletedCounter % n === 0) {
         let stepsCompleted = backtestCompletedCounter / n;
         let remainingBacktests = options.length - backtestCompletedCounter;
