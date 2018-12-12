@@ -5,7 +5,6 @@ const axios = require('axios');
 const promiseLimit = require('promise-limit');
 const createCsvWriter = require('csv-writer').createObjectCsvWriter;
 const math = require('mathjs');
-const upperCaseFirst = require('upper-case-first');
 const chalk = require('chalk');
 const log = console.log;
 const {table} = require('table');
@@ -247,7 +246,7 @@ function runBacktest(config) {
 
     marky.mark(backtestId);
 
-    log(chalk.cyan('Started:', chalk.dim(`${config.tradingAdvisor.method} ${config.watch.currency.toUpperCase()}/${config.watch.asset.toUpperCase()} ${config.tradingAdvisor.candleSize}/${config.tradingAdvisor.historySize} ${upperCaseFirst(config.watch.exchange)}`)));
+    log(chalk.cyan('Started:', chalk.dim(`${config.tradingAdvisor.method} ${config.watch.currency.toUpperCase()}/${config.watch.asset.toUpperCase()} ${config.tradingAdvisor.candleSize}/${config.tradingAdvisor.historySize} ${_.startCase(config.watch.exchange)}`)));
 
     process.on('unhandledRejection', (reason, promise) => {
         log('Unhandled Rejection at:', reason.stack || reason)
@@ -263,7 +262,7 @@ function runBacktest(config) {
             let resultCsvLine = [];
 
             if (_.isEmpty(tradingAdvisor) || _.isEmpty(performanceReport)) {
-                log(chalk.red('No trades for:', chalk.dim(`${config.tradingAdvisor.method} ${config.watch.currency.toUpperCase()}/${config.watch.asset.toUpperCase()} ${config.tradingAdvisor.candleSize}/${config.tradingAdvisor.historySize} ${upperCaseFirst(config.watch.exchange)}`)));
+                log(chalk.red('No trades for:', chalk.dim(`${config.tradingAdvisor.method} ${config.watch.currency.toUpperCase()}/${config.watch.asset.toUpperCase()} ${config.tradingAdvisor.candleSize}/${config.tradingAdvisor.historySize} ${_.startCase(config.watch.exchange)}`)));
 
                 completedBacktestCounter++;
 
@@ -320,7 +319,7 @@ function runBacktest(config) {
                         return csvWriter.writeRecords(resultCsvLine);
                     })
                     .then(() => {
-                        log(chalk.green('Complete:', chalk.dim(`${config.tradingAdvisor.method} ${config.watch.currency.toUpperCase()}/${config.watch.asset.toUpperCase()} ${config.tradingAdvisor.candleSize}/${config.tradingAdvisor.historySize} ${upperCaseFirst(config.watch.exchange)}`)));
+                        log(chalk.green('Complete:', chalk.dim(`${config.tradingAdvisor.method} ${config.watch.currency.toUpperCase()}/${config.watch.asset.toUpperCase()} ${config.tradingAdvisor.candleSize}/${config.tradingAdvisor.historySize} ${_.startCase(config.watch.exchange)}`)));
 
                         completedBacktestCounter++;
 
