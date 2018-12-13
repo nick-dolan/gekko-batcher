@@ -43,19 +43,20 @@ config.methods = ['RSI', 'MACD', 'StochRSI'];
 //                          BRUTEFORCE SEARCHER
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-config.method = 'MACD';
+config.method = 'RSI';
 
 // Shuffle generated combinations of method's configs
 config.shuffle = true;
 
-// Generate all possible permutations of an object's key-value pairs.
-// One-level object of properties only. Property names must match the name of method's properties from all levels of nesting.
-// Format: 'start:step:end'
+// Generate all possible combinations of set of settings with given ranges
+// Format for range: 'start:step:end'
 config.ranges = {
-    interval: '12:1:14',
-    low: '28:1:30',
-    high: '68:1:72',
-    persistence: '1:0.5:2'
+    interval: '8:1:10',
+    thresholds: {
+        low: '24:1:26',
+        high: '70:1:80',
+        persistence: 1
+    }
 };
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

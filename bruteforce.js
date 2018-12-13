@@ -4,17 +4,17 @@ require('events').EventEmitter.defaultMaxListeners = 200;
 const axios = require('axios');
 const promiseLimit = require('promise-limit');
 const createCsvWriter = require('csv-writer').createObjectCsvWriter;
-const math = require('mathjs');
 const chalk = require('chalk');
 const log = console.log;
 const {table} = require('table');
 const fs = require('fs');
 const combos = require('combos');
-const _ = require('deepdash')(require('lodash'));
+const _ = require('lodash');
 const moment = require('moment');
 const marky = require('marky');
 const uniqid = require('uniqid');
 const momentDurationFormatSetup = require("moment-duration-format");
+const flatten = require('flat');
 
 momentDurationFormatSetup(moment);
 
@@ -27,66 +27,49 @@ let httpConfig = {
     headers: {'Content-Type': 'application/json'},
 };
 
-/*
-* Set preferable ranges for method's options
-* */
 let method = config.method;
-
-/*
-* Set preferable ranges for method's options
-* */
-let ranges = _.mapValues(config.ranges, function (value) {
-    let params = value.split(":");
-
-    return util.generateRange(+params[0], +params[2], +params[1]);
-});
-
-/*
-* Shuffle generated combinations of method's configs
-* */
 let shuffle = config.shuffle;
-
-/*
-* Settings
-* */
 let gekkoPath = config.gekkoPath;
 let apiUrl = config.apiUrl;
 let tomlConfigPath = gekkoPath + 'config/strategies';
-
 let candleSizes = config.candleSizes;
 let historySizes = config.historySizes;
 let tradingPairs = config.tradingPairs;
 let daterange = config.daterange;
 let parallelQueries = config.parallelQueries;
+let flattenRanges = flatten(config.ranges);
 
-/*
-* Generate all possible combinations of selected ranges
-* */
+let ranges = _.mapValues(flattenRanges, function (value) {
+    if (_.includes(value, ':')) {
+        let params = value.split(":");
+
+        return util.generateRange(+params[0], +params[2], +params[1]);
+    }
+    else {
+        return [value]
+    }
+});
+
 const combinations = combos(_.mapValues(ranges, function (value) {
     if (util.isMatrix(value)) {
         return value._data;
     }
+    else {
+        return value;
+    }
 }));
 
-/*
-* Prepare strategy config (put all real strategy configs into array)
-* */
 let strategyConfigs = [];
-let methodSettings = util.getMethodSettingsByPriority(method, config.configPriorityLocations);
 
-_.forEach(combinations, function (combination) {
-    let obj = _.cloneDeep(methodSettings.settings);
+_.forEach(combinations, function (item) {
+    let obj = {};
 
-    _.eachDeep(obj, (value, key, path, depth, parent, parentKey, parentPath) => {
-        _.forOwn(combination, function (item, name) {
-            if (key === name) {
-                obj = _.set(obj, path, +item);
-            }
-        });
+    _.forOwn(item, function (value, key) {
+        obj = _.set(obj, key, value);
     });
 
     strategyConfigs.push(obj);
-});
+})
 
 if (shuffle) {
     strategyConfigs = _.shuffle(strategyConfigs);
