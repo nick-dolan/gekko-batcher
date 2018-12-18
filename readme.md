@@ -1,10 +1,12 @@
 # Backtest tools for Gekko
 
-CLI tool helps to put together testing and optimizing strategies that extend the  Gekko's Trading Bot capabilities – and thus get the most of it. The results appear in a CSV report file. This report provides key statistics describing the overall performance of the selected strategies over the chosen historical timing of the simulation.
+CLI tool helps to put together testing and optimizing strategies that extend the  Gekko's Trading Bot capabilities – and thus you may get the most of it, and see what combinations were the best and the worst, backed up by statistics.
+
+The results appear in a CSV report file. It provides key statistics describing the overall performance of the selected strategies over the chosen historical timing of the simulation.
 
 It uses [Gekko's API](https://gekko.wizb.it/docs/internals/server_api.html#POST-api-backtest), one gekko instance running required only.
 
-#### You can set up multiple:
+#### You can set up multiple…
 
 - Candle sizes
 - HistorySizes
@@ -14,7 +16,7 @@ It uses [Gekko's API](https://gekko.wizb.it/docs/internals/server_api.html#POST-
 
 #### Features
 
-- Ability to set up priority of where to get method's config (be it TOML, gekko's config.js or gekko-batcher's config itself)
+- Ability to set up the priority of where to get method's config (be it TOML, gekko's config.js or gekko-batcher's config itself)
 - Generating all possible combinations of configs for backtests and shuffle it
 - Multithreading
 - Exporting results to CSV file
