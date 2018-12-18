@@ -37,7 +37,7 @@ Set up everyting you need in `config.js`.
 
 Batch backtest tool for multiple strategies and pairs.
 
-### Usage
+#### Usage
 
 Set up settings in `config.js` and you are ready to go. Type `node batcher` in terminal and see process.
 
@@ -47,7 +47,7 @@ You can find csv output in results folder: `/results/batch.csv`
 
 Run all possible parameter combinations for specific method with given ranges for strategy optimization.
 
-### Usage
+#### Usage
 
 In addition to the other settings specify `method` you want (`config.method = 'YourMethod';`) and `ranges` in your config file. Example:
 
