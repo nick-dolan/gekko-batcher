@@ -33,7 +33,7 @@ First, you need to install dependencies: `npm install`. Then start [Gekko](https
 
 Don't forget to create **config** file. Just copy sample-config.js like this: `cp sample-config.js config.js`. 
 
-Set up everyting you need in `config.js`. 
+Set up everything you need in `config.js`. 
 
 ## Backtest Batcher 
 
