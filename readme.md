@@ -66,7 +66,7 @@ config.ranges = {
 
 The name of the property for range must match the property name in method's config. 
 
- Type `node batcher` in terminal and see process. You can find csv output in results folder: `/results/bruteforce.csv`
+ Type `node bruteforce` in terminal and see process. You can find csv output in results folder: `/results/bruteforce.csv`
 
 ### [Sample file output](https://github.com/nicolay-zlobin/gekko-batcher/blob/master/sample_results.csv)
 
