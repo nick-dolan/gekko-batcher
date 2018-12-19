@@ -45,7 +45,7 @@ Set up settings in `config.js` and you are ready to go. Type `node batcher` in t
 
 You can find csv output in results folder: `/results/batch.csv`
 
-## Bruteforce Seacher
+## Bruteforce Searcher
 
 Run all possible parameter combinations for specific method with given ranges for strategy optimization.
 
