@@ -24,15 +24,15 @@ const util = {
 
         return toml.parse(raw);
     },
-    countDecimals: function (a) {
-        if (!isFinite(a)) {
+    countDecimals: function (number) {
+        if (!_.isFinite(number)) {
             return 0;
         }
 
         var e = 1,
             p = 0;
 
-        while (Math.round(a * e) / e !== a) {
+        while (_.round(number * e) / e !== number) {
             e *= 10;
             p++;
         }
@@ -44,7 +44,7 @@ const util = {
             precision = 2
         }
 
-        return math.round(+number, precision);
+        return _.round(+number, precision);
     },
     isMatrix: function (v) {
         if (v) {
@@ -83,7 +83,8 @@ const util = {
             return util.getTOML(`${tomlConfigPath}/${name}.toml`);
         }
         else {
-            log('There is no such config\'s location as ' + location);
+            log(`There is no such config\'s location as ${location}`);
+            process.exit();
         }
     },
     getMethodSettingsByPriority: function (name, locations) {

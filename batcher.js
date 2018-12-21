@@ -5,7 +5,6 @@ const axios = require('axios');
 const promiseLimit = require('promise-limit');
 const createCsvWriter = require('csv-writer').createObjectCsvWriter;
 const moment = require('moment');
-const math = require('mathjs');
 const chalk = require('chalk');
 const log = console.log;
 const {table} = require('table');
