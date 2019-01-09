@@ -262,9 +262,9 @@ function runBacktest(config) {
 
                 resultCsvLine = [{
                     method: tradingAdvisor.method,
-                    market_performance_percent: util.round(performanceReport.market),
-                    relative_profit: util.round(performanceReport.relativeProfit),
-                    profit: util.round(performanceReport.profit),
+                    market_performance_percent: util.round(performanceReport.market, 3),
+                    relative_profit: util.round(performanceReport.relativeProfit, 3),
+                    profit: util.round(performanceReport.profit, 3),
                     run_date: moment().utc().format('ll'),
                     run_time: moment().utc().format('LT'),
                     start_date: util.humanizeDate(performanceReport.startTime),
@@ -276,8 +276,8 @@ function runBacktest(config) {
                     asset: market.asset.toUpperCase(),
                     exchange: market.exchange,
                     timespan: performanceReport.timespan,
-                    yearly_profit: util.round(performanceReport.relativeProfit),
-                    yearly_profit_percent: util.round(performanceReport.yearlyProfit),
+                    yearly_profit: util.round(performanceReport.relativeProfit, 3),
+                    yearly_profit_percent: util.round(performanceReport.yearlyProfit, 3),
                     start_price: performanceReport.startPrice,
                     end_price: performanceReport.endPrice,
                     trades: performanceReport.trades,
