@@ -212,6 +212,8 @@ function runBacktest(config) {
 
     return new Promise(function (resolve) {
         axios.post(`${apiUrl}/api/backtest`, config, httpConfig).then((response) => {
+            console.log(JSON.stringify(config, null, 2));
+
             let market = response.data.market;
             let tradingAdvisor = response.data.tradingAdvisor;
             let strategyParameters = response.data.strategyParameters;
@@ -261,7 +263,7 @@ function runBacktest(config) {
                     alpha: util.round(performanceReport.alpha, 3),
                     config: JSON.stringify(strategyParameters),
                     downside: util.round(performanceReport.downside, 3),
-                    settings_location: config.settingsLocation
+                    settings_location: config.configLocation
                 }];
 
                 terminalTable.push([

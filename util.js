@@ -167,7 +167,8 @@ const util = {
                 "riskFreeReturn": 2,
                 "enabled": true
             },
-            "valid": true
+            "valid": true,
+            "configLocation": options.settingsLocation
         };
     }
 }
