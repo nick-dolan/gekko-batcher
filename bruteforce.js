@@ -92,6 +92,7 @@ for (let c = 0; c < candleSizes.length; c++) {
                         currency: tradingPairs[t][1],
                         asset: tradingPairs[t][2]
                     },
+                    paperTrader: config.paperTrader,
                     method: method
                 };
 
@@ -182,6 +183,7 @@ const csvWriter = createCsvWriter({
         {id: 'sharpe', title: 'Sharpe'},
         {id: 'alpha', title: 'Alpha'},
         {id: 'config', title: 'Config'},
+        {id: 'paper_trader', title: 'Paper trader config'},
         {id: 'downside', title: 'Downside'},
     ]
 });
@@ -283,6 +285,7 @@ function runBacktest(config) {
                     sharpe: util.round(performanceReport.sharpe, 3),
                     alpha: util.round(performanceReport.alpha, 3),
                     config: JSON.stringify(strategyParameters),
+                    paper_trader: JSON.stringify(config.paperTrader),
                     downside: util.round(performanceReport.downside, 3)
                 }];
 

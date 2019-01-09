@@ -25,6 +25,18 @@ config.daterange = {
     to: '2018-06-19T17:16:00Z'
 };
 
+// Initial balance, fees and slippage/spread
+config.paperTrader = {
+    simulationBalance: {
+        currency: 50,
+        asset: 0
+    },
+    feeMaker: 0.25,
+    feeTaker: 0.25,
+    feeUsing: 'maker',
+    slippage: 0.05,
+}
+
 // Where to get method's settings.
 // The first has high priority. Then second, if there's no settings in first place and so on.
 
@@ -68,6 +80,17 @@ config.RSI = {
     thresholds: {
         low: 25,
         high: 75,
+        persistence: 1
+    }
+};
+
+config.MACD = {
+    short: 10,
+    long: 21,
+    signal: 9,
+    thresholds: {
+        down: -0.000025,
+        up: 0.000025,
         persistence: 1
     }
 };

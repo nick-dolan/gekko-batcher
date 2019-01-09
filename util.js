@@ -132,11 +132,11 @@ const util = {
                 "asset": options.tradingPair.asset
             },
             "paperTrader": {
-                "feeMaker": 0.25,
-                "feeTaker": 0.25,
-                "feeUsing": "maker",
-                "slippage": 0.05,
-                "simulationBalance": {"asset": 1, "currency": 100},
+                "feeMaker": options.paperTrader.feeMaker,
+                "feeTaker": options.paperTrader.feeTaker,
+                "feeUsing": options.paperTrader.feeUsing,
+                "slippage": options.paperTrader.slippage,
+                "simulationBalance": options.paperTrader.simulationBalance,
                 "reportRoundtrips": true,
                 "enabled": true
             },
