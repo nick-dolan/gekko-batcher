@@ -212,8 +212,6 @@ function runBacktest(config) {
 
     return new Promise(function (resolve) {
         axios.post(`${apiUrl}/api/backtest`, config, httpConfig).then((response) => {
-            console.log(JSON.stringify(config, null, 2));
-
             let market = response.data.market;
             let tradingAdvisor = response.data.tradingAdvisor;
             let strategyParameters = response.data.strategyParameters;
