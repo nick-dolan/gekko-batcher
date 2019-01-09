@@ -60,9 +60,8 @@ const util = {
             let arr = math.range(start, end, step, true);
 
             return arr.map(function (number) {
-                return number.toFixed(util.countDecimals(step))
+                return +number.toFixed(util.countDecimals(step));
             });
-
         }
         else {
             return math.range(start, end, 1, true);
