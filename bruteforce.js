@@ -1,6 +1,6 @@
+require('events').EventEmitter.defaultMaxListeners = 1000;
 const config = require('./config');
 const util = require('./util');
-require('events').EventEmitter.defaultMaxListeners = 200;
 const axios = require('axios');
 const promiseLimit = require('promise-limit');
 const createCsvWriter = require('csv-writer').createObjectCsvWriter;
