@@ -19,10 +19,25 @@ if (fs.existsSync(config.gekkoPath + 'config.js')) {
 * Helper functions
 * */
 const util = {
-    getTOML: function (fileName) {
-        let raw = fs.readFileSync(fileName);
+    getTOML: function(fileName) {
+        try {
+            let raw = fs.readFileSync(fileName);
 
-        return toml.parse(raw);
+            return  toml.parse(raw);
+        } catch (err) {
+            return {};
+        }
+    },
+    getAllStrategyNames: function() {
+        const fs = require('fs');
+
+        let arr = []
+
+        fs.readdirSync(config.gekkoPath + 'strategies/').forEach(file => {
+            arr.push(file.replace(/.js/g,''));
+        })
+
+        return JSON.stringify(arr);
     },
     countDecimals: function (number) {
         if (!_.isFinite(number)) {

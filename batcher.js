@@ -42,6 +42,12 @@ let methods = config.methods;
 let daterange = config.daterange;
 let parallelQueries = config.parallelQueries;
 
+let methodConfigs = {};
+
+for (let m = 0; m < methods.length; m++) {
+    methodConfigs[methods[m]] = util.getMethodSettingsByPriority(methods[m], config.configPriorityLocations);
+}
+
 /*
 * Collect settings
 * */
@@ -51,8 +57,6 @@ for (let c = 0; c < candleSizes.length; c++) {
     for (let h = 0; h < historySizes.length; h++) {
         for (let t = 0; t < tradingPairs.length; t++) {
             for (let m = 0; m < methods.length; m++) {
-                const methodConfig = util.getMethodSettingsByPriority(methods[m], config.configPriorityLocations);
-
                 let option = {
                     candleSize: candleSizes[c],
                     historySize: historySizes[h],
@@ -63,10 +67,10 @@ for (let c = 0; c < candleSizes.length; c++) {
                     },
                     paperTrader: config.paperTrader,
                     method: methods[m],
-                    settingsLocation: methodConfig.location
+                    settingsLocation: methodConfigs[methods[m]].location
                 };
 
-                option[methods[m]] = methodConfig.settings;
+                option[methods[m]] = methodConfigs[methods[m]].settings;
 
                 options.push(option);
             }
@@ -303,7 +307,9 @@ function runBacktest(config) {
                 process.exit(0);
             }
             else {
-                log(error);
+                log(chalk.red(chalk.dim(`Error for method: ${config.tradingAdvisor.method} ${config.watch.currency.toUpperCase()}/${config.watch.asset.toUpperCase()} ${config.tradingAdvisor.candleSize}/${config.tradingAdvisor.historySize} ${_.startCase(config.watch.exchange)}`)));
+
+                // log(error);
             }
         })
     })
