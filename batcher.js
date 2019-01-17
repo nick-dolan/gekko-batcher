@@ -86,6 +86,7 @@ if (shuffle) {
 * Show complete number of combinations
 * */
 log(options.length + ' ' + 'combinations');
+log(chalk.green(`Start time: ${moment().format('MMMM Do YYYY, h:mm:ss a')}`));
 
 /*
 * Collect all settings for batcher
@@ -309,7 +310,7 @@ function runBacktest(config) {
             else {
                 log(chalk.red(chalk.dim(`Error for method: ${config.tradingAdvisor.method} ${config.watch.currency.toUpperCase()}/${config.watch.asset.toUpperCase()} ${config.tradingAdvisor.candleSize}/${config.tradingAdvisor.historySize} ${_.startCase(config.watch.exchange)}`)));
 
-                // log(error);
+                log(error);
             }
         })
     })

@@ -108,6 +108,7 @@ for (let c = 0; c < candleSizes.length; c++) {
 * Show the number of combinations
 * */
 log(options.length + ' ' + 'combinations');
+log(chalk.green(`Start time: ${moment().format('MMMM Do YYYY, h:mm:ss a')}`));
 
 /*
 * Collect all settings for batcher
