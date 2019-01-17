@@ -275,7 +275,7 @@ function runBacktest(config) {
                     slippage: config.paperTrader.slippage,
                     simulation_balance: `Currency: ${config.paperTrader.simulationBalance.currency}, Asset: ${config.paperTrader.simulationBalance.asset}`,
                     downside: util.round(performanceReport.downside, 3),
-                    settings_location: config.configLocation
+                    settings_location: config.configLocation || 'no config'
                 }];
 
                 terminalTable.push([
