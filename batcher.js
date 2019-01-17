@@ -142,27 +142,30 @@ const csvWriter = createCsvWriter({
         {id: 'market_performance_percent', title: 'Market performance (%)'},
         {id: 'relative_profit', title: 'Strat performance (%)'},
         {id: 'profit', title: 'Profit'},
+        {id: 'trades', title: 'Trades'},
+        {id: 'sharpe', title: 'Sharpe'},
+        {id: 'alpha', title: 'Alpha'},
+        {id: 'candle_size', title: 'Candle size'},
+        {id: 'history_size', title: 'History size'},
+        {id: 'timespan', title: 'Timespan'},
         {id: 'run_date', title: 'Run date'},
         {id: 'run_time', title: 'Run time'},
         {id: 'start_date', title: 'Start date'},
         {id: 'end_date', title: 'End date'},
         {id: 'currency_pair', title: 'Currency pair'},
-        {id: 'candle_size', title: 'Candle size'},
-        {id: 'history_size', title: 'History size'},
         {id: 'currency', title: 'Currency'},
         {id: 'asset', title: 'Asset'},
         {id: 'exchange', title: 'Exchange'},
-        {id: 'timespan', title: 'Timespan'},
         {id: 'yearly_profit', title: 'Yearly profit'},
         {id: 'yearly_profit_percent', title: 'Yearly profit (%)'},
         {id: 'start_price', title: 'Start price'},
         {id: 'end_price', title: 'End price'},
-        {id: 'trades', title: 'Trades'},
         {id: 'start_balance', title: 'Start balance'},
-        {id: 'sharpe', title: 'Sharpe'},
-        {id: 'alpha', title: 'Alpha'},
         {id: 'config', title: 'Config'},
-        {id: 'paper_trader', title: 'Paper trader config'},
+        {id: 'fee_maker', title: 'Fee maker'},
+        {id: 'fee_taker', title: 'Fee taker'},
+        {id: 'slippage', title: 'Slippage'},
+        {id: 'simulation_balance', title: 'Simulation balance'},
         {id: 'downside', title: 'Downside'},
         {id: 'settings_location', title: 'Method\'s settings location'},
     ]
@@ -267,7 +270,10 @@ function runBacktest(config) {
                     sharpe: util.round(performanceReport.sharpe, 3),
                     alpha: util.round(performanceReport.alpha, 3),
                     config: JSON.stringify(strategyParameters),
-                    paper_trader: JSON.stringify(config.paperTrader),
+                    fee_maker: config.paperTrader.feeMaker,
+                    fee_taker: config.paperTrader.feeTaker,
+                    slippage: config.paperTrader.slippage,
+                    simulation_balance: `Currency: ${config.paperTrader.simulationBalance.currency}, Asset: ${config.paperTrader.simulationBalance.asset}`,
                     downside: util.round(performanceReport.downside, 3),
                     settings_location: config.configLocation
                 }];
@@ -310,7 +316,7 @@ function runBacktest(config) {
             else {
                 log(chalk.red(chalk.dim(`Error for method: ${config.tradingAdvisor.method} ${config.watch.currency.toUpperCase()}/${config.watch.asset.toUpperCase()} ${config.tradingAdvisor.candleSize}/${config.tradingAdvisor.historySize} ${_.startCase(config.watch.exchange)}`)));
 
-                log(error);
+                // log(error);
             }
         })
     })
