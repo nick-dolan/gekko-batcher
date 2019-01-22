@@ -36,6 +36,10 @@ Don't forget to create **config** file. Just copy sample-config.js like this: `c
 
 Set up everything you need in `config.js`. 
 
+Set debug false at `/gekko/web/routes/baseConfig.js` for better performance.
+
+Increase `server.timeout` at `/gekko/web/server.js` to avoid a timeout error if the strategy runs for a long time. This is true for small sizes of candles. For example, this happens for small sized candles.
+
 ## Backtest Batcher 
 
 Batch backtest tool for multiple strategies and pairs.
