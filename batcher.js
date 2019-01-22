@@ -39,7 +39,7 @@ let candleSizes = config.candleSizes;
 let historySizes = config.historySizes;
 let tradingPairs = config.tradingPairs;
 let methods = config.methods;
-let daterange = config.daterange;
+let dateranges = config.dateranges;
 let parallelQueries = config.parallelQueries;
 
 let methodConfigs = {};
@@ -57,22 +57,25 @@ for (let c = 0; c < candleSizes.length; c++) {
     for (let h = 0; h < historySizes.length; h++) {
         for (let t = 0; t < tradingPairs.length; t++) {
             for (let m = 0; m < methods.length; m++) {
-                let option = {
-                    candleSize: candleSizes[c],
-                    historySize: historySizes[h],
-                    tradingPair: {
-                        exchange: tradingPairs[t][0],
-                        currency: tradingPairs[t][1],
-                        asset: tradingPairs[t][2]
-                    },
-                    paperTrader: config.paperTrader,
-                    method: methods[m],
-                    settingsLocation: methodConfigs[methods[m]].location
-                };
+                for (let d = 0; d < dateranges.length; d++) {
+                    let option = {
+                        candleSize: candleSizes[c],
+                        historySize: historySizes[h],
+                        tradingPair: {
+                            exchange: tradingPairs[t][0],
+                            currency: tradingPairs[t][1],
+                            asset: tradingPairs[t][2]
+                        },
+                        paperTrader: config.paperTrader,
+                        method: methods[m],
+                        settingsLocation: methodConfigs[methods[m]].location,
+                        daterange: dateranges[d]
+                    };
 
-                option[methods[m]] = methodConfigs[methods[m]].settings;
+                    option[methods[m]] = methodConfigs[methods[m]].settings;
 
-                options.push(option);
+                    options.push(option);
+                }
             }
         }
     }
@@ -94,7 +97,7 @@ log(chalk.green(`Start time: ${moment().format('MMMM Do YYYY, h:mm:ss a')}`));
 let allConfigs = [];
 
 for (let o = 0; o < options.length; o++) {
-    let backtestConfig = util.getConfig(options[o], daterange);
+    let backtestConfig = util.getConfig(options[o]);
 
     backtestConfig[options[o].method] = options[o][options[o].method];
 
@@ -313,10 +316,17 @@ function runBacktest(config) {
 
                 process.exit(0);
             }
+            if (error.response.status === 500) {
+                log(error.response.data);
+                log(error.message);
+                log('See the Gekko logs to find out the reason')
+
+                process.exit(0);
+            }
             else {
                 log(chalk.red(chalk.dim(`Error for method: ${config.tradingAdvisor.method} ${config.watch.currency.toUpperCase()}/${config.watch.asset.toUpperCase()} ${config.tradingAdvisor.candleSize}/${config.tradingAdvisor.historySize} ${_.startCase(config.watch.exchange)}`)));
 
-                // log(error);
+                log(error.message);
             }
         })
     })

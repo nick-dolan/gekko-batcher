@@ -138,7 +138,7 @@ const util = {
             log('Approximately remaining time:', moment.duration(remainingTime).format("d [days], h [hours], m [minutes], s [seconds]"), `(${moment.duration(remainingTime).humanize()})`);
         }
     },
-    getConfig: function (options, daterange) {
+    getConfig: function (options) {
         return {
             "watch": {
                 "exchange": options.tradingPair.exchange,
@@ -162,8 +162,8 @@ const util = {
             },
             "backtest": {
                 "daterange": {
-                    "from": daterange.from,
-                    "to": daterange.to
+                    "from": options.daterange.from,
+                    "to": options.daterange.to
                 }
             },
             "backtestResultExporter": {
@@ -182,7 +182,7 @@ const util = {
                 "enabled": true
             },
             "valid": true,
-            "configLocation": options.settingsLocation
+            "configLocation": options.settingsLocation,
         };
     }
 }

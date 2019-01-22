@@ -20,10 +20,13 @@ config.tradingPairs = [
     ["poloniex", "eth", "bch"]
 ];
 
-config.daterange = {
-    from: '2018-03-19T17:16:00Z',
-    to: '2018-06-19T17:16:00Z'
-};
+config.dateranges = [{
+    from: '2018-07-01 00:00',
+    to: '2018-08-01 00:00'
+}, {
+    from: '2018-12-01 00:00',
+    to: '2018-12-15 00:00'
+}];
 
 // Initial balance, fees and slippage/spread
 config.paperTrader = {
