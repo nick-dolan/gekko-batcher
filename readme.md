@@ -13,6 +13,7 @@ It uses [Gekko's API](https://gekko.wizb.it/docs/internals/server_api.html#POST-
 - Strategies
 - Trading Pairs
 - Range of strategy config's paraments (BruteForce)
+- Dateranges
 
 #### Features
 
