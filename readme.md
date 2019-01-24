@@ -38,7 +38,7 @@ Set up everything you need in `config.js`.
 
 Set debug false at `/gekko/web/routes/baseConfig.js` for better performance.
 
-Increase `server.timeout` at `/gekko/web/server.js` to avoid a timeout error if the strategy runs for a long time. This is true for small sizes of candles. For example, this happens for small sized candles.
+Increase `server.timeout` at `/gekko/web/server.js` to avoid a timeout error if the strategy runs for a long time. For example, this happens for small sized candles.
 
 ## Backtest Batcher 
 
