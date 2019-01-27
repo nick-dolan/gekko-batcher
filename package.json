@@ -23,6 +23,7 @@
   },
   "homepage": "https://gitlab.com/bud-fox/gekko-bruteforce#readme",
   "dependencies": {
+    "async": "^2.6.1",
     "axios": "^0.18.0",
     "chalk": "^2.4.1",
     "combos": "^0.2.0",

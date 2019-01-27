@@ -37,6 +37,7 @@ let historySizes = config.historySizes;
 let tradingPairs = config.tradingPairs;
 let dateranges = config.dateranges;
 let parallelQueries = config.parallelQueries;
+
 let flattenRanges = flatten(config.ranges);
 
 let ranges = _.mapValues(flattenRanges, function (value) {

@@ -28,17 +28,6 @@ const util = {
             return {};
         }
     },
-    getAllStrategyNames: function() {
-        const fs = require('fs');
-
-        let arr = []
-
-        fs.readdirSync(config.gekkoPath + 'strategies/').forEach(file => {
-            arr.push(file.replace(/.js/g,''));
-        })
-
-        return JSON.stringify(arr);
-    },
     countDecimals: function (number) {
         if (!_.isFinite(number)) {
             return 0;
