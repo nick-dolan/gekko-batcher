@@ -17,6 +17,8 @@ let bm = configsGenerator.getAllMethodConfigs();
 let bo = configsGenerator.generateAllBatchCombinations(bm);
 let bf = configsGenerator.prepareAllConfigsForGekko(bo);
 
+log(f[0])
+
 // if (mode === 'batch') {
 // }
 // else if (mode === 'bruteforce') {
