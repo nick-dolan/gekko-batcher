@@ -45,6 +45,9 @@ let ranges = _.mapValues(flattenRanges, function (value) {
 
         return util.generateRange(+params[0], +params[2], +params[1]);
     }
+    if (_.includes(value, '|')) {
+        return value.split("|");
+    }
     else {
         return [value];
     }
