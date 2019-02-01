@@ -46,7 +46,18 @@ let ranges = _.mapValues(flattenRanges, function (value) {
         return util.generateRange(+params[0], +params[2], +params[1]);
     }
     if (_.includes(value, '|')) {
-        return value.split("|");
+        let params = value.split("|");
+
+        params = _.map(params, (item) => {
+            if (item === 'true') {
+                return true;
+            }
+            else if (item === 'false') {
+                return false;
+            }
+        });
+
+        return params;
     }
     else {
         return [value];
