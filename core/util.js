@@ -8,22 +8,21 @@ program
   .option('-f, --bruteforce', 'Bruteforce mode')
   .parse(process.argv)
 
-const config = require('../' + program.config)
-
 const util = {
+  config: {},
   getConfig () {
     if (!program.config) {
       util.die('Please specify a config file.')
-    }
-
-    if (!fs.existsSync(util.dirs().batcher + program.config)) {
+    } else if (!fs.existsSync(util.dirs().batcher + program.config)) {
       util.die('Cannot find the specified config file.')
     }
 
-    return require(util.dirs().batcher + program.config)
+    util.config = require(util.dirs().batcher + program.config)
+
+    return this.config
   },
   getGekkoConfig () {
-    let gekkoConfig = util.dirs().gekko + config.gekkoConfigFileName
+    let gekkoConfig = util.dirs().gekko + util.config.gekkoConfigFileName
 
     if (fs.existsSync(gekkoConfig)) {
       return require(gekkoConfig)
@@ -47,15 +46,17 @@ const util = {
       batcher: ROOT,
       core: ROOT + 'core/',
       tools: ROOT + 'core/tools/',
-      gekko: ROOT + config.gekkoPath,
-      gekkoTOML: ROOT + config.gekkoPath + 'config/strategies'
+      gekko: ROOT + util.config.gekkoPath,
+      gekkoTOML: ROOT + util.config.gekkoPath + 'config/strategies'
     }
   },
   backtestMode () {
-    if (program['batch']) {
+    if (program.batch) {
       return 'batch'
-    } else if (program['bruteforce']) {
+    } else if (program.bruteforce) {
       return 'bruteforce'
+    } else if (!program.batch || !program.bruteforce) {
+      util.die('Please specify a mode.')
     } else {
       util.die('Unknown mode')
     }

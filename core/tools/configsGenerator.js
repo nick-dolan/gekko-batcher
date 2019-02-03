@@ -4,10 +4,11 @@ const fs = require('fs')
 const _ = require('lodash')
 const toml = require('toml')
 const util = require('../util.js')
+const log = console.log
 
 const config = util.getConfig()
 const gekkoConfig = util.getGekkoConfig()
-const mode = util.backtestMode()
+// const mode = util.backtestMode()
 
 const batch = require('./configsGenerator/batch')
 const bruteforce = require('./configsGenerator/bruteforce')
@@ -53,7 +54,7 @@ const configsGenerator = {
     } else if (location === 'gekko-toml') {
       return configsGenerator.getTOML(`${util.dirs().gekkoTOML}/${name}.toml`)
     } else {
-      log(`There is no such config\'s location as ${location}`)
+      log(`There is no such config's location as ${location}`)
 
       process.exit()
     }

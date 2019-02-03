@@ -20,8 +20,8 @@ const math = {
       return 0
     }
 
-    var e = 1,
-      p = 0
+    let e = 1
+    let p = 0
 
     while (_.round(number * e) / e !== number) {
       e *= 10

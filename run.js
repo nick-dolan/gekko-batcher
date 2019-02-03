@@ -1,10 +1,9 @@
+const log = console.log
 const util = require('./core/util.js')
 const dirs = util.dirs()
 const configsGenerator = require(dirs.tools + '/configsGenerator')
-const math = require(dirs.core + '/math')
-
-const mode = util.backtestMode()
-const log = console.log
+// const math = require(dirs.core + '/math')
+// const mode = util.backtestMode()
 
 // Bruteforce
 let r = configsGenerator.generateRangesOfMethod()
@@ -17,7 +16,8 @@ let bm = configsGenerator.getAllMethodConfigs()
 let bo = configsGenerator.generateAllBatchCombinations(bm)
 let bf = configsGenerator.prepareAllConfigsForGekko(bo)
 
-log(f[0])
+log(f.length)
+log(bf.length)
 
 // if (mode === 'batch') {
 // }
