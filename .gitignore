@@ -11,3 +11,4 @@ npm-debug.log
 test.js
 results/*.csv
 *config.js
+*test*.js

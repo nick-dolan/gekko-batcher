@@ -1,5 +1,6 @@
 const program = require('commander')
 const fs = require('fs')
+const log = console.log
 
 program
   .version('0.1.0')
@@ -59,6 +60,18 @@ const util = {
       util.die('Please specify a mode.')
     } else {
       util.die('Unknown mode')
+    }
+  },
+  createResultsFolder () {
+    if (!fs.existsSync('./results')) {
+      fs.mkdirSync('./results')
+    }
+  },
+  errorHandler (err) {
+    if (err.code === 'ECONNREFUSED') {
+      util.die('Gekko isn\'t running probably. Go to Gekko\'s folder and type: node gekko --ui')
+    } else if (err.response.status === 500) {
+      log(err.response.statusText)
     }
   }
 }

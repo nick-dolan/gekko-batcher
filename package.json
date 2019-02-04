@@ -25,6 +25,7 @@
   "dependencies": {
     "async": "^2.6.1",
     "axios": "^0.18.0",
+    "bluebird": "^3.5.3",
     "chalk": "^2.4.1",
     "combos": "^0.2.0",
     "commander": "^2.19.0",
@@ -34,7 +35,9 @@
     "mathjs": "^5.2.3",
     "moment": "^2.22.2",
     "moment-duration-format": "^2.2.2",
+    "p-limit": "^2.1.0",
     "promise-limit": "^2.7.0",
+    "request": "^2.88.0",
     "table": "^5.1.0",
     "toml": "^2.3.3",
     "uniqid": "^5.0.3"
