@@ -12,17 +12,16 @@ const marky = require('marky')
 const uniqid = require('uniqid')
 
 util.createResultsFolder()
-util.mode = 'bruteforce'
+util.mode = 'batch'
 
-let ranges = configsGenerator.generateRangesOfMethod()
-let combs = configsGenerator.getAllCombinationsFromRanges(ranges)
-let strategyConfigs = configsGenerator.generateAllBruteforceCombinations(combs)
-let gekkoConfigs = configsGenerator.prepareAllConfigsForGekko(strategyConfigs)
+let methodConfigs = configsGenerator.getAllMethodConfigs()
+let combs = configsGenerator.generateAllBatchCombinations(methodConfigs)
+let gekkoConfigs = configsGenerator.prepareAllConfigsForGekko(combs)
 
 info.initMessage(gekkoConfigs.length)
 
 const csvStream = csv.createWriteStream({ headers: true })
-const writableStream = fs.createWriteStream('results/bruteforceV2.csv')
+const writableStream = fs.createWriteStream('results/batchV2.csv')
 
 csvStream.pipe(writableStream)
 
@@ -51,7 +50,7 @@ async function runBacktest (config) {
       if (!_.isEmpty(performanceReport)) {
         info.successfulBacktests++
 
-        row = resultsHandler.prepareCsvRow(response.data)
+        row = resultsHandler.prepareCsvRow(response.data, config)
         info.spentTime += marky.stop(backtestId).duration
         info.completeBacktest(config)
 

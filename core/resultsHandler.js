@@ -3,7 +3,7 @@ const math = require('../core/math')
 const moment = require('moment')
 
 const resultsHandler = {
-  prepareCsvRow (results) {
+  prepareCsvRow (results, config) {
     let market = results.market
     let tradingAdvisor = results.tradingAdvisor
     let strategyParameters = results.strategyParameters
@@ -33,13 +33,17 @@ const resultsHandler = {
       'Start price': performanceReport.startPrice,
       'End price': performanceReport.endPrice,
       'Start balance': performanceReport.startBalance,
+      'Final balance': performanceReport.balance,
       'Config': JSON.stringify(strategyParameters),
       'Fee maker': util.config.paperTrader.feeMaker,
       'Fee taker': util.config.paperTrader.feeTaker,
       'Slippage': util.config.paperTrader.slippage,
       'Simulation balance': `Currency: ${util.config.paperTrader.simulationBalance.currency}, Asset: ${util.config.paperTrader.simulationBalance.asset}`,
       'Downside': math.round(performanceReport.downside, 3)
-      // 'Method\'s settings location': location
+    }
+
+    if (util.mode === 'batch') {
+      resultRow['Method\'s settings location'] = config.configLocation || 'no config'
     }
 
     return resultRow
