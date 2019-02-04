@@ -5,8 +5,6 @@ const log = console.log
 program
   .version('0.1.0')
   .option('-c, --config <file>', 'Config file')
-  .option('-b, --batch', 'Batch mode')
-  .option('-f, --bruteforce', 'Bruteforce mode')
   .parse(process.argv)
 
 const util = {
@@ -49,17 +47,6 @@ const util = {
       tools: ROOT + 'core/tools/',
       gekko: ROOT + util.config.gekkoPath,
       gekkoTOML: ROOT + util.config.gekkoPath + 'config/strategies'
-    }
-  },
-  backtestMode () {
-    if (program.batch) {
-      return 'batch'
-    } else if (program.bruteforce) {
-      return 'bruteforce'
-    } else if (!program.batch || !program.bruteforce) {
-      util.die('Please specify a mode.')
-    } else {
-      util.die('Unknown mode')
     }
   },
   createResultsFolder () {

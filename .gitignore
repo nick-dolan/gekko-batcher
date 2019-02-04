@@ -12,3 +12,4 @@ test.js
 results/*.csv
 *config.js
 *test*.js
+old*.js

@@ -8,7 +8,6 @@ const log = console.log
 
 const config = util.getConfig()
 const gekkoConfig = util.getGekkoConfig()
-// const mode = util.backtestMode()
 
 const batch = require('./configsGenerator/batch')
 const bruteforce = require('./configsGenerator/bruteforce')
