@@ -30,6 +30,7 @@
     "combos": "^0.2.0",
     "commander": "^2.19.0",
     "csv-writer": "^1.2.0",
+    "fast-csv": "^2.4.1",
     "flat": "^4.1.0",
     "marky": "^1.2.1",
     "mathjs": "^5.2.3",
