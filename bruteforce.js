@@ -30,6 +30,8 @@ async.mapLimit(gekkoConfigs, util.config.parallelQueries, runBacktest, (err) => 
   if (err) throw err
 
   csvStream.end()
+
+  info.finishMessage()
 })
 
 async function runBacktest (config) {
@@ -57,7 +59,7 @@ async function runBacktest (config) {
       } else {
         info.failureBacktests++
         info.spentTime += marky.stop(backtestId).duration
-        info.noTradesForBacktest(config)
+        info.withoutTrades(config)
       }
 
       info.processInfo()
@@ -66,6 +68,8 @@ async function runBacktest (config) {
     if (err.code === 'ECONNREFUSED') {
       util.die('Gekko isn\'t running probably. Go to Gekko\'s folder and type: node gekko --ui')
     } else {
+      info.errorInMethod(config)
+
       log(err)
     }
 
