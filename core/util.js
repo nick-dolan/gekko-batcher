@@ -9,6 +9,7 @@ program
 
 const util = {
   config: {},
+  mode: '',
   getConfig () {
     if (!program.config) {
       util.die('Please specify a config file.')
@@ -54,11 +55,24 @@ const util = {
       fs.mkdirSync('./results')
     }
   },
-  errorHandler (err) {
-    if (err.code === 'ECONNREFUSED') {
-      util.die('Gekko isn\'t running probably. Go to Gekko\'s folder and type: node gekko --ui')
-    } else if (err.response.status === 500) {
-      log(err.response.statusText)
+  countTime (allCombinations, completedBacktests, spentTime, step) {
+    if (completedBacktests % step === 0) {
+      let completedSteps = completedBacktests / step
+      let remainingBacktests = allCombinations - completedBacktests
+      let remainingSteps = remainingBacktests / step
+      let realSpentTime = spentTime / util.config.parallelQueries
+      let remainingTime = 0
+
+      if (completedSteps === 1) {
+        remainingTime = remainingSteps * realSpentTime
+      } else if (completedSteps > 1) {
+        remainingTime = remainingSteps * realSpentTime / completedSteps
+      }
+
+      return {
+        remaining: remainingTime,
+        spent: realSpentTime
+      }
     }
   }
 }
