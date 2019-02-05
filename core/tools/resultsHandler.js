@@ -1,5 +1,5 @@
-const util = require('../core/util')
-const math = require('../core/math')
+const util = require('../util')
+const math = require('../math')
 const moment = require('moment')
 
 const resultsHandler = {

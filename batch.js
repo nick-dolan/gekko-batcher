@@ -1,7 +1,7 @@
 const log = console.log
 const util = require('./core/util.js')
 const configsGenerator = require(util.dirs().tools + '/configsGenerator')
-const resultsHandler = require(util.dirs().core + '/resultsHandler')
+const resultsHandler = require(util.dirs().tools + '/resultsHandler')
 const info = require(util.dirs().core + '/info')
 const async = require('async')
 const axios = require('axios')
