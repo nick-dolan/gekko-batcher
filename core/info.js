@@ -31,8 +31,9 @@ const info = {
   withoutTrades (config) {
     log(chalk.gray('No trades for:', chalk.dim(`${config.tradingAdvisor.method} ${config.watch.currency.toUpperCase()}/${config.watch.asset.toUpperCase()} ${config.tradingAdvisor.candleSize}/${config.tradingAdvisor.historySize} ${_.startCase(config.watch.exchange)}`)))
   },
-  finishMessage () {
+  finishMessage (fileName) {
     log('Process has been finished. Spent time:', moment.duration(this.spentTime / util.config.parallelQueries).format('d [days], h [hours], m [minutes], s [seconds]'))
+    log(`See results in results/${fileName}`)
   },
   processInfo () {
     let step = 0

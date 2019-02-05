@@ -17,11 +17,12 @@ util.mode = 'batch'
 let methodConfigs = configsGenerator.getAllMethodConfigs()
 let combs = configsGenerator.generateAllBatchCombinations(methodConfigs)
 let gekkoConfigs = configsGenerator.prepareAllConfigsForGekko(combs)
+let fileName = util.generateFileName()
 
 info.initMessage(gekkoConfigs.length)
 
 const csvStream = csv.createWriteStream({ headers: true })
-const writableStream = fs.createWriteStream('results/batchV2.csv')
+const writableStream = fs.createWriteStream(`${util.dirs().results}/${fileName}`)
 
 csvStream.pipe(writableStream)
 
@@ -30,7 +31,7 @@ async.mapLimit(gekkoConfigs, util.config.parallelQueries, runBacktest, (err) => 
 
   csvStream.end()
 
-  info.finishMessage()
+  info.finishMessage(fileName)
 })
 
 async function runBacktest (config) {

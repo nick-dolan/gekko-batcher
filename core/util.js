@@ -1,6 +1,8 @@
 const program = require('commander')
 const fs = require('fs')
 const path = require('path')
+const moment = require('moment')
+const _ = require('lodash')
 
 program
   .version('0.1.0')
@@ -45,6 +47,7 @@ const util = {
     return {
       batcher: ROOT,
       core: ROOT + 'core/',
+      results: ROOT + 'results/',
       tools: ROOT + 'core/tools/',
       gekko: ROOT + util.config.gekkoPath,
       gekkoTOML: ROOT + util.config.gekkoPath + 'config/strategies'
@@ -74,6 +77,9 @@ const util = {
         spent: realSpentTime
       }
     }
+  },
+  generateFileName () {
+    return `${_.capitalize(util.mode)} ${moment().format('MMM Do YY, HH-mm')}.csv`
   }
 }
 

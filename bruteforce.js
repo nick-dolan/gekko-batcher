@@ -18,11 +18,12 @@ let ranges = configsGenerator.generateRangesOfMethod()
 let combs = configsGenerator.getAllCombinationsFromRanges(ranges)
 let strategyConfigs = configsGenerator.generateAllBruteforceCombinations(combs)
 let gekkoConfigs = configsGenerator.prepareAllConfigsForGekko(strategyConfigs)
+let fileName = util.generateFileName()
 
 info.initMessage(gekkoConfigs.length)
 
 const csvStream = csv.createWriteStream({ headers: true })
-const writableStream = fs.createWriteStream('results/bruteforceV2.csv')
+const writableStream = fs.createWriteStream(`${util.dirs().results}/${fileName}`)
 
 csvStream.pipe(writableStream)
 
@@ -31,7 +32,7 @@ async.mapLimit(gekkoConfigs, util.config.parallelQueries, runBacktest, (err) => 
 
   csvStream.end()
 
-  info.finishMessage()
+  info.finishMessage(fileName)
 })
 
 async function runBacktest (config) {
