@@ -40,7 +40,7 @@ const info = {
     if (this.allCombinations < 500) {
       step = 10
     } else {
-      step = 100
+      step = 50
     }
 
     if (this.completedBacktests % step === 0) {

@@ -14,6 +14,19 @@ const bruteforce = {
         let params = _.split(value, ':')
 
         return math.generateRange(+params[0], +params[2], +params[1])
+      }
+      if (_.includes(value, '|')) {
+        let params = value.split('|')
+
+        params = _.map(params, (item) => {
+          if (item === 'true') {
+            return true
+          } else if (item === 'false') {
+            return false
+          }
+        })
+
+        return params
       } else {
         return [value]
       }

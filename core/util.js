@@ -1,6 +1,6 @@
 const program = require('commander')
 const fs = require('fs')
-const log = console.log
+const path = require('path')
 
 program
   .version('0.1.0')
@@ -40,7 +40,7 @@ const util = {
     process.exit(1)
   },
   dirs () {
-    const ROOT = __dirname + '/../'
+    const ROOT = path.join(__dirname, '/../')
 
     return {
       batcher: ROOT,
