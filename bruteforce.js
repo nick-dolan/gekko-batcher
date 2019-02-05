@@ -68,9 +68,11 @@ async function runBacktest (config) {
   } catch (err) {
     if (err.code === 'ECONNREFUSED') {
       util.die('Gekko isn\'t running probably. Go to Gekko\'s folder and type: node gekko --ui')
-    } else if (err.response.status === 500) {
-      log(err.response.data, err.message)
-      log('See Gekko\'s logs to find out the reason')
+    } else if (err.response && err.response.status) {
+      if (err.response.status === 500) {
+        log(err.response.data, err.message)
+        log('See Gekko\'s logs to find out the reason')
+      }
     } else {
       log(err)
     }
