@@ -4,7 +4,7 @@ const mathjs = require('mathjs')
 const _ = require('lodash')
 
 const math = {
-  generateRange: function (start, end, step) {
+  generateRange (start, end, step) {
     if (step && end) {
       let arr = mathjs.range(start, end, step, true)
 
@@ -15,7 +15,7 @@ const math = {
       return mathjs.range(start, end, 1, true)
     }
   },
-  countDecimals: function (number) {
+  countDecimals (number) {
     if (!_.isFinite(number)) {
       return 0
     }
@@ -37,10 +37,15 @@ const math = {
 
     return _.round(+number, precision)
   },
-  isMatrix: function (v) {
+  isMatrix (v) {
     if (v) {
       return mathjs.typeof(v) === 'Matrix'
     }
+  },
+  percentDiff (base, peak, round = false, precision = 3) {
+    const diff = (peak - base) / base * 100
+
+    return round ? math.round(diff, 3) : diff
   }
 }
 

@@ -116,7 +116,7 @@ const configsGenerator = {
           'roundtrips': false,
           'stratCandles': false,
           'stratCandleProps': ['open'],
-          'trades': false
+          'trades': true
         }
       },
       'performanceAnalyzer': {

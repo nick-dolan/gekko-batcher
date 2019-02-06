@@ -1,13 +1,69 @@
 const util = require('../util')
 const math = require('../math')
 const moment = require('moment')
+const _ = require('lodash')
 
 const resultsHandler = {
-  prepareCsvRow (results, config) {
-    let market = results.market
-    let tradingAdvisor = results.tradingAdvisor
-    let strategyParameters = results.strategyParameters
-    let performanceReport = results.performanceReport
+  findBiggestWinAndLoss (data) {
+    let trades = this.balanceChange(data)
+
+    let biggestWin = _.maxBy(trades, (o) => {
+      return o.balanceChange
+    })
+
+    let biggestLoss = _.minBy(trades, (o) => {
+      return o.balanceChange
+    })
+
+    return {
+      biggestWin: biggestWin.balanceChange,
+      biggestWinPercent: biggestWin.balanceChangePercent,
+      biggestLoss: biggestLoss.balanceChange,
+      biggestLossPercent: biggestLoss.balanceChangePercent
+    }
+  },
+  balanceChange (data) {
+    let startBalance = data.performanceReport.startBalance
+    let trades = data.trades
+    let tradesWithBalanceChange = []
+
+    _.forEach(trades, function (trade, i) {
+      let prevBalance = trades[i - 1] ? trades[i - 1].balance : startBalance
+
+      trade.balanceChange = math.round(trade.balance - prevBalance, 4)
+      trade.balanceChangePercent = math.percentDiff(prevBalance, trade.balance, true, 3)
+
+      tradesWithBalanceChange.push(trade)
+    })
+
+    return tradesWithBalanceChange
+  },
+  countWinsAndLosses (data) {
+    let startBalance = data.performanceReport.startBalance
+    let trades = data.trades
+
+    let wins = 0
+    let losses = 0
+
+    _.forEach(data.trades, function (trade, i) {
+      let prevBalance = trades[i - 1] ? trades[i - 1].balance : startBalance.startBalance
+
+      trade.balance > prevBalance ? wins++ : losses++
+    })
+
+    return {
+      wins: wins,
+      losses: losses
+    }
+  },
+  prepareCsvRow (data, config) {
+    let market = data.market
+    let tradingAdvisor = data.tradingAdvisor
+    let strategyParameters = data.strategyParameters
+    let performanceReport = data.performanceReport
+
+    let winsAndLosses = this.countWinsAndLosses(data)
+    let biggestWinAndLoss = this.findBiggestWinAndLoss(data)
 
     let resultRow = {
       'Method': tradingAdvisor.method,
@@ -15,6 +71,14 @@ const resultsHandler = {
       'Strat performance (%)': math.round(performanceReport.relativeProfit, 3),
       'Profit': math.round(performanceReport.profit, 3),
       'Trades': performanceReport.trades,
+      'Wins': winsAndLosses.wins,
+      'Losses': winsAndLosses.losses,
+      'Biggest win': biggestWinAndLoss.biggestWin,
+      'Biggest win (%)': biggestWinAndLoss.biggestWinPercent,
+      'Biggest loss': biggestWinAndLoss.biggestWin,
+      'Biggest loss (%)': biggestWinAndLoss.biggestWinPercent,
+      'Start balance': performanceReport.startBalance,
+      'Final balance': performanceReport.balance,
       'Sharpe': math.round(performanceReport.sharpe, 3),
       'Alpha': math.round(performanceReport.alpha, 3),
       'Candle size': tradingAdvisor.candleSize,
@@ -32,8 +96,6 @@ const resultsHandler = {
       'Yearly profit (%)': math.round(performanceReport.yearlyProfit),
       'Start price': performanceReport.startPrice,
       'End price': performanceReport.endPrice,
-      'Start balance': performanceReport.startBalance,
-      'Final balance': performanceReport.balance,
       'Config': JSON.stringify(strategyParameters),
       'Fee maker': util.config.paperTrader.feeMaker,
       'Fee taker': util.config.paperTrader.feeTaker,
