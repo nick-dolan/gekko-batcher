@@ -5,27 +5,28 @@ const config = {}
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 config.gekkoPath = '../gekko/'
+config.gekkoConfigFileName = 'config.js'
 
 config.apiUrl = 'http://localhost:3000'
 
-config.parallelQueries = 4
+config.parallelQueries = 5
 
-config.candleSizes = [45, 60, 75]
+config.candleSizes = [30, 60]
 
 config.historySizes = [10, 15]
 
 // Format: [exchange, currency, asset]
 config.tradingPairs = [
-  ['poloniex', 'eth', 'zec'],
-  ['poloniex', 'eth', 'bch']
+  ['binance', 'usdt', 'btc'],
+  ['poloniex', 'eth', 'zec']
 ]
 
 config.dateranges = [{
-  from: '2018-07-01 00:00',
-  to: '2018-08-01 00:00'
+  from: '2018-06-05 00:00',
+  to: '2018-07-05 00:00'
 }, {
-  from: '2018-12-01 00:00',
-  to: '2018-12-15 00:00'
+  from: '2018-06-05 00:00',
+  to: '2018-07-30 00:00'
 }]
 
 // Initial balance, fees and slippage/spread
@@ -52,7 +53,7 @@ config.configPriorityLocations = ['batcher', 'gekko', 'gekko-toml']
 //                          BACKTEST BATCHER
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-config.methods = ['RSI', 'MACD', 'StochRSI']
+config.methods = ['RSI', 'MACD', 'StochRSI', 'CCI']
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 //                          BRUTEFORCE SEARCHER
