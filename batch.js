@@ -1,4 +1,3 @@
-const log = console.log
 const util = require('./core/util.js')
 const configsGenerator = require(util.dirs().tools + '/configsGenerator')
 const resultsHandler = require(util.dirs().tools + '/resultsHandler')
@@ -65,16 +64,7 @@ async function runBacktest (config) {
       info.processInfo()
     })
   } catch (err) {
-    if (err.code === 'ECONNREFUSED') {
-      util.die('Gekko isn\'t running probably. Go to Gekko\'s folder and type: node gekko --ui')
-    } else if (err.response && err.response.status) {
-      if (err.response.status === 500) {
-        log(err.response.data, err.message)
-        log('See Gekko\'s logs to find out the reason')
-      }
-    } else {
-      log(err)
-    }
+    util.errorHandler(err)
 
     info.errorInMethod(config)
     info.failureBacktests++

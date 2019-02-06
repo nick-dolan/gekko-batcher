@@ -3,6 +3,7 @@ const fs = require('fs')
 const path = require('path')
 const moment = require('moment')
 const _ = require('lodash')
+const log = console.log
 
 program
   .version('0.1.0')
@@ -79,7 +80,19 @@ const util = {
     }
   },
   generateFileName () {
-    return `${_.capitalize(util.mode)} ${moment().format('MMM Do YY, HH-mm')}.csv`
+    return `${_.capitalize(util.mode)} (${moment().format('MMM Do YY, HH-mm')}).csv`
+  },
+  errorHandler (err) {
+    if (err.code === 'ECONNREFUSED') {
+      util.die('Gekko isn\'t running probably. Go to Gekko\'s folder and type: node gekko --ui')
+    } else if (err.response && err.response.status) {
+      if (err.response.status === 500) {
+        log(err.response.data, err.message)
+        log('See Gekko\'s logs to find out the reason')
+      }
+    } else {
+      log(err)
+    }
   }
 }
 
