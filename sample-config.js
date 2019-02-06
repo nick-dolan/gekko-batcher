@@ -7,6 +7,7 @@ const config = {}
 config.gekkoPath = '../gekko/'
 config.gekkoConfigFileName = 'config.js'
 
+// URL that serving Gekko UI
 config.apiUrl = 'http://localhost:3000'
 
 config.parallelQueries = 5
@@ -28,6 +29,9 @@ config.dateranges = [{
   from: '2018-06-05 00:00',
   to: '2018-07-30 00:00'
 }]
+
+// Shuffle generated combinations of method's configs
+config.shuffle = true
 
 // Initial balance, fees and slippage/spread
 config.paperTrader = {
@@ -59,13 +63,12 @@ config.methods = ['RSI', 'MACD', 'StochRSI', 'CCI']
 //                          BRUTEFORCE SEARCHER
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+// Specify strategy you want for bruteforce
 config.method = 'RSI'
 
-// Shuffle generated combinations of method's configs
-config.shuffle = true
-
-// Generate all possible combinations of set of settings with given ranges
-// Format for range: 'start:step:end'
+// Specify ranges settings for the given method. It generates all
+// possible combinations of a set of settings with given ranges
+// Format for range: 'start:step:end' or 'true|false'
 config.ranges = {
   interval: '8:1:10',
   thresholds: {
