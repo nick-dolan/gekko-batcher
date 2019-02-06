@@ -9,6 +9,7 @@ node_modules
 npm-debug.log
 .idea
 test.js
-test-config.js
 results/*.csv
-config.js
+*config.js
+*test*.js
+old*.js
