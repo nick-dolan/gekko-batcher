@@ -42,10 +42,15 @@ const math = {
       return mathjs.typeof(v) === 'Matrix'
     }
   },
-  percentDiff (base, peak, round = false, precision = 3) {
+  ruleOfThree (had, got, have, round = false, precision = 2) {
+    let result = +have * +got / +had
+
+    return round ? math.round(result, precision) : result
+  },
+  percentDiff (base, peak, round = false, precision = 2) {
     const diff = (peak - base) / base * 100
 
-    return round ? math.round(diff, 3) : diff
+    return round ? math.round(diff, precision) : diff
   }
 }
 

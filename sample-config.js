@@ -36,8 +36,8 @@ config.shuffle = true
 // Initial balance, fees and slippage/spread
 config.paperTrader = {
   simulationBalance: {
-    currency: 50,
-    asset: 0
+    currency: 1000,
+    asset: 1
   },
   feeMaker: 0.25,
   feeTaker: 0.25,

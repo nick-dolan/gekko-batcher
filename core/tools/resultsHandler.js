@@ -7,12 +7,12 @@ const resultsHandler = {
   findBiggestWinAndLoss (data) {
     let trades = this.balanceChange(data)
 
-    let biggestWin = _.maxBy(trades, (o) => {
-      return o.balanceChange
+    let biggestWin = _.maxBy(trades, (trade) => {
+      return trade.balanceChange
     })
 
-    let biggestLoss = _.minBy(trades, (o) => {
-      return o.balanceChange
+    let biggestLoss = _.minBy(trades, (trade) => {
+      return trade.balanceChange
     })
 
     return {
@@ -38,7 +38,7 @@ const resultsHandler = {
 
     return tradesWithBalanceChange
   },
-  countWinsAndLosses (data) {
+  countWinsAndLosses (data, allTrades) {
     let startBalance = data.performanceReport.startBalance
     let trades = data.trades
 
@@ -53,7 +53,9 @@ const resultsHandler = {
 
     return {
       wins: wins,
-      losses: losses
+      winsPercent: math.ruleOfThree(allTrades, wins, 100, true),
+      losses: losses,
+      lossesPercent: math.ruleOfThree(allTrades, losses, 100, true)
     }
   },
   prepareCsvRow (data, config) {
@@ -61,8 +63,9 @@ const resultsHandler = {
     let tradingAdvisor = data.tradingAdvisor
     let strategyParameters = data.strategyParameters
     let performanceReport = data.performanceReport
+    let allTrades = performanceReport.trades
 
-    let winsAndLosses = this.countWinsAndLosses(data)
+    let winsAndLosses = this.countWinsAndLosses(data, allTrades)
     let biggestWinAndLoss = this.findBiggestWinAndLoss(data)
 
     let resultRow = {
@@ -72,11 +75,13 @@ const resultsHandler = {
       'Profit': math.round(performanceReport.profit, 3),
       'Trades': performanceReport.trades,
       'Wins': winsAndLosses.wins,
+      'Wins (%)': winsAndLosses.winsPercent,
       'Losses': winsAndLosses.losses,
+      'Losses (%)': winsAndLosses.lossesPercent,
       'Biggest win': biggestWinAndLoss.biggestWin,
       'Biggest win (%)': biggestWinAndLoss.biggestWinPercent,
-      'Biggest loss': biggestWinAndLoss.biggestWin,
-      'Biggest loss (%)': biggestWinAndLoss.biggestWinPercent,
+      'Biggest loss': biggestWinAndLoss.biggestLoss,
+      'Biggest loss (%)': biggestWinAndLoss.biggestLossPercent,
       'Start balance': performanceReport.startBalance,
       'Final balance': performanceReport.balance,
       'Sharpe': math.round(performanceReport.sharpe, 3),
