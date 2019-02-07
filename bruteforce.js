@@ -1,3 +1,4 @@
+require('events').EventEmitter.defaultMaxListeners = 1000
 const util = require('./core/util.js')
 const configsGenerator = require(util.dirs().tools + '/configsGenerator')
 const resultsHandler = require(util.dirs().tools + '/resultsHandler')
