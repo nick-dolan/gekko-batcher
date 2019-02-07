@@ -10,7 +10,8 @@ config.gekkoConfigFileName = 'config.js'
 // URL that serving Gekko UI
 config.apiUrl = 'http://localhost:3000'
 
-config.parallelQueries = 5
+// Keep it lower than the number of cores you have
+config.parallelQueries = 3
 
 config.candleSizes = [30, 60]
 
