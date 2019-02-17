@@ -1,115 +1,18 @@
 const util = require('./core/util.js')
 util.mode = 'import'
 const log = console.log
-const moment = require('moment')
 const _ = require('lodash')
 const axios = require('axios')
 const async = require('async')
-util.getConfig()
 const WebSocket = require('ws')
 const { Observable } = require('rxjs')
 const chalk = require('chalk')
+const configsGenerator = require(util.dirs().tools + '/configsGenerator')
 
 /*
-* Convert dateranges to unix format
+* Get configs
 * */
-util.config.dateranges = _.map(util.config.dateranges, (obj) => {
-  return _.mapValues(obj, (date) => {
-    return moment.utc(date, 'YYYY-MM-DD HH:mm').unix()
-  })
-})
-
-/*
-* Prepare configs
-* */
-let configs = []
-
-_.each(util.config.tradingPairs, (pair) => {
-  configs.push({
-    exchange: pair[0],
-    currency: pair[1].toUpperCase(),
-    asset: pair[2].toUpperCase(),
-    dateranges: util.config.dateranges
-  })
-})
-
-/*
-* Prepare config for Gekko's import request
-* */
-function prepareConfigForImport (config) {
-  return {
-    'watch': {
-      'exchange': config.exchange,
-      'currency': config.currency,
-      'asset': config.asset
-    },
-    'importer': {
-      'daterange': {
-        'from': moment.utc(config.importFrom, 'X').format('YYYY-MM-DD HH:mm'),
-        'to': moment.utc(config.importTo, 'X').format('YYYY-MM-DD HH:mm')
-      }
-    },
-    'candleWriter': {
-      'enabled': true
-    }
-  }
-}
-
-/*
-* A preliminary check of datasets (compare given ranges with already downloaded)
-* */
-let checkRange = (importFrom, importTo, importedRanges) => {
-  let updatedRange = {
-    importFrom: importFrom,
-    importTo: importTo,
-    isRequired: true
-  }
-
-  _.each(importedRanges, (imported) => {
-    /*
-    * The specified range is within already imported data. No import is required
-    * */
-    if (importFrom >= imported.from && importTo <= imported.to) {
-      updatedRange.isRequired = false
-    }
-
-    /*
-    * If the already imported range is not within the specified range
-    * */
-    else if ((importFrom >= imported.to && importTo >= imported.from) || (importTo <= imported.from && importTo <= imported.to)) {
-      _.noop()
-    }
-    /*
-    * If the already imported data range overlaps the specified range from left
-    * */
-    else if (importFrom >= imported.from && importFrom < imported.to) {
-      importFrom = imported.to
-
-      updatedRange = {
-        importFrom: importFrom,
-        importTo: importTo,
-        isRequired: true
-      }
-
-      log('New value "from" is:', importFrom, moment.utc(importFrom, 'X').format('YYYY-MM-DD HH:mm'))
-    }
-    /*
-    * If the already imported data range overlaps the specified range from rigth
-    * */
-    else if (importTo > imported.from && importTo <= imported.to) {
-      importTo = imported.from
-
-      updatedRange = {
-        importFrom: importFrom,
-        importTo: importTo,
-        isRequired: true
-      }
-      log('New value "to" is:', importTo, moment.utc(importTo, 'X').format('YYYY-MM-DD HH:mm'))
-    }
-  })
-
-  return updatedRange
-}
+let configs = configsGenerator.getConfigs()
 
 /*
 * Prepare configs to import
@@ -127,20 +30,22 @@ function asyncScanTasks (next) {
 }
 
 /*
-* All async scans tasks
+* All async tasks for scan
 * */
 async function asyncScans (config) {
   try {
     let scan = await postScan(config)
 
-    await updateConfigs(config, scan)
-  } catch (error) {
-    log(error)
+    let updatedConfig = configsGenerator.updateConfig(config, scan)
+
+    readyConfigs = _.concat(readyConfigs, updatedConfig)
+  } catch (err) {
+    util.errorHandler(err)
   }
 }
 
 /*
-* Request for scan
+* API Scan request
 * */
 async function postScan (config) {
   let request = {
@@ -156,35 +61,14 @@ async function postScan (config) {
   })
 }
 
-async function updateConfigs (config, scan) {
-  _.each(config.dateranges, (toImport) => {
-    let updatedRange = checkRange(toImport.from, toImport.to, scan)
-
-    if (!updatedRange.isRequired) {
-      log(`No import is required for specified range: ${config.exchange}, ${config.currency}/${config.asset}`)
-      log(`From ${moment.utc(updatedRange.importFrom, 'X').format('YYYY-MM-DD HH:mm')} to ${moment.utc(updatedRange.importTo, 'X').format('YYYY-MM-DD HH:mm')}`)
-    } else {
-      let configForImport = prepareConfigForImport({
-        exchange: config.exchange,
-        currency: config.currency,
-        asset: config.asset,
-        importFrom: updatedRange.importFrom,
-        importTo: updatedRange.importTo
-      })
-
-      readyConfigs.push(configForImport)
-    }
-  })
-}
-
 /*
 * Set up new Observable with Proxy inside for
 * ability to subscribe when import is complete
 * */
-let arr = []
+let completedImports = []
 
 const observable = new Observable(subscriber => {
-  arr = new Proxy(arr, {
+  completedImports = new Proxy(completedImports, {
     set: function (target, key, value) {
       if (key === 'length') {
         subscriber.next(target)
@@ -202,6 +86,10 @@ const observable = new Observable(subscriber => {
 * */
 const ws = new WebSocket(`ws://localhost:3000/gekko_event`, '', {})
 
+ws.on('error', function (err) {
+  util.errorHandler(err)
+})
+
 ws.on('message', function incoming (data) {
   let responce = JSON.parse(data)
 
@@ -209,8 +97,12 @@ ws.on('message', function incoming (data) {
 
   // Push completed ID of backtests into the Proxy's array
   if (responce.updates && responce.updates.done === true) {
-    arr.push(responce.import_id)
+    completedImports.push(responce.import_id)
   }
+})
+
+ws.on('close', function close () {
+  console.log('Disconnected')
 })
 
 /*
@@ -238,8 +130,8 @@ async function asyncImports (config) {
     let completedImport = await listenImports(startedImportID)
 
     log(chalk.green(`Import with ID ${completedImport.id} completed`))
-  } catch (error) {
-    log(error)
+  } catch (err) {
+    util.errorHandler(err)
   }
 }
 
@@ -261,8 +153,8 @@ async function postImport (config) {
 async function listenImports (currentImport) {
   return new Promise(
     (resolve, reject) => {
-      const subscription = observable.subscribe(value => {
-        if (value.includes(currentImport.id)) {
+      const subscription = observable.subscribe(comletedImports => {
+        if (_.includes(comletedImports, currentImport.id)) {
           subscription.unsubscribe()
 
           resolve(currentImport)

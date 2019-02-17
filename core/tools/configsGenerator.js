@@ -11,6 +11,7 @@ const gekkoConfig = util.getGekkoConfig()
 
 const batch = require('./configsGenerator/batch')
 const bruteforce = require('./configsGenerator/bruteforce')
+const importer = require('./configsGenerator/importer')
 
 const configsGenerator = {
   getAllMethodConfigs () {
@@ -67,11 +68,11 @@ const configsGenerator = {
       return {}
     }
   },
-  prepareAllConfigsForGekko (configs) {
+  getAllBacktestRequestConfigs (configs) {
     let allConfigs = []
 
     _.each(configs, (config) => {
-      let backtestConfig = configsGenerator.prepareConfigForGekko(config)
+      let backtestConfig = configsGenerator.getBacktestRequestConfig(config)
 
       backtestConfig[config.method] = config[config.method]
 
@@ -80,7 +81,7 @@ const configsGenerator = {
 
     return allConfigs
   },
-  prepareConfigForGekko (options) {
+  getBacktestRequestConfig (options) {
     let config = {
       'watch': {
         'exchange': options.tradingPair.exchange,
@@ -136,5 +137,9 @@ const configsGenerator = {
 
 _.assign(configsGenerator, batch)
 _.assign(configsGenerator, bruteforce)
+
+if (util.mode === 'import') {
+  _.assign(configsGenerator, importer)
+}
 
 module.exports = configsGenerator

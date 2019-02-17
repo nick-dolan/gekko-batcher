@@ -16,7 +16,7 @@ util.mode = 'batch'
 
 let methodConfigs = configsGenerator.getAllMethodConfigs()
 let combs = configsGenerator.generateAllBatchCombinations(methodConfigs)
-let gekkoConfigs = configsGenerator.prepareAllConfigsForGekko(combs)
+let gekkoConfigs = configsGenerator.getAllBacktestRequestConfigs(combs)
 let fileName = util.generateFileName()
 
 info.initMessage(gekkoConfigs.length)

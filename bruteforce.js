@@ -17,7 +17,7 @@ util.mode = 'bruteforce'
 let ranges = configsGenerator.generateRangesOfMethod()
 let combs = configsGenerator.getAllCombinationsFromRanges(ranges)
 let strategyConfigs = configsGenerator.generateAllBruteforceCombinations(combs)
-let gekkoConfigs = configsGenerator.prepareAllConfigsForGekko(strategyConfigs)
+let gekkoConfigs = configsGenerator.getAllBacktestRequestConfigs(strategyConfigs)
 let fileName = util.generateFileName()
 
 info.initMessage(gekkoConfigs.length)
