@@ -23,7 +23,7 @@ function asyncScanTasks (next) {
   async.mapLimit(configs, 3, asyncScans, (err) => {
     if (err) throw err
 
-    log('Configs are ready!')
+    log('Number of imports', readyConfigs.length)
 
     next()
   })
@@ -109,7 +109,7 @@ ws.on('close', function close () {
 * Start imports with given concurrency
 * */
 function asyncImportTasks (next) {
-  async.mapLimit(readyConfigs, 1, asyncImports, (err) => {
+  async.mapLimit(readyConfigs, util.config.parallelQueries, asyncImports, (err) => {
     if (err) throw err
 
     log('All imports are complete')

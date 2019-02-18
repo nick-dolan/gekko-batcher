@@ -11,7 +11,8 @@ config.gekkoConfigFileName = 'config.js'
 config.apiUrl = 'http://localhost:3000'
 
 // Keep it lower than the number of cores you have
-config.parallelQueries = 3
+// Note: 2 is recommended value for import mode
+config.parallelQueries = 2
 
 config.candleSizes = [30, 60]
 
@@ -23,6 +24,8 @@ config.tradingPairs = [
   ['poloniex', 'eth', 'zec']
 ]
 
+// Note: only one daterange for "import" mode allowed if parallelQueries > 1
+// It's related to constraints with database
 config.dateranges = [{
   from: '2018-06-05 00:00',
   to: '2018-07-05 00:00'

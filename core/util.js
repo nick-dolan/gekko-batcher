@@ -25,9 +25,9 @@ const util = {
     util.config = require(util.dirs().batcher + program.config)
 
     if (isConfigExists) {
-      if (util.mode === 'import') {
+      if (util.mode === 'import' && util.config.parallelQueries > 1) {
         if (util.config.dateranges.length > 1) {
-          util.die('Only one daterange allowed in mode "import" (resonable constraint)')
+          util.die('Only one daterange allowed in mode "import" if parallelQueries bigger 1')
         }
       }
     }

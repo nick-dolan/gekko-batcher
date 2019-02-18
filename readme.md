@@ -10,6 +10,7 @@ It uses [Gekko's API](https://gekko.wizb.it/docs/internals/server_api.html#POST-
 
 - Backtest Batcher – batch backtest tool for multiple strategies and pairs.
 - Bruteforce Searcher – run all possible parameter combinations for specific method with given ranges for strategy optimization.
+- Importer – allow you to import multiple datasets thick and fast
 
 #### You can set up multiple…
 
@@ -60,6 +61,8 @@ After all the above you can start tools by running one of the following in your 
 `node batch -c config.js` – to start Backtest Batcher
 
 `node bruteforce -c config.js` – to start Bruteforce Searcher
+
+`node importer -c config.js` –  to start Importer
 
 ---
 
