@@ -14,13 +14,23 @@ const util = {
   config: {},
   mode: '',
   getConfig () {
+    let isConfigExists = fs.existsSync(util.dirs().batcher + program.config)
+
     if (!program.config) {
       util.die('Please specify a config file.')
-    } else if (!fs.existsSync(util.dirs().batcher + program.config)) {
+    } else if (!isConfigExists) {
       util.die('Cannot find the specified config file.')
     }
 
     util.config = require(util.dirs().batcher + program.config)
+
+    if (isConfigExists) {
+      if (util.mode === 'import') {
+        if (util.config.dateranges.length > 1) {
+          util.die('Only one daterange allowed in mode "import" (resonable constraint)')
+        }
+      }
+    }
 
     return this.config
   },
