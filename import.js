@@ -81,10 +81,12 @@ const observable = new Observable(subscriber => {
   })
 })
 
+let api = util.removeHttp(util.config.apiUrl)
+
 /*
 * Init client for WebSocket
 * */
-const ws = new WebSocket(`ws://localhost:3000/gekko_event`, '', {})
+const ws = new WebSocket(`ws://${api}/gekko_event`, '', {})
 
 ws.on('error', function (err) {
   util.errorHandler(err)

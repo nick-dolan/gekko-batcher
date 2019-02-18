@@ -89,6 +89,9 @@ const util = {
       }
     }
   },
+  removeHttp (url) {
+    return url.replace(/^(https?:|)\/\//, '')
+  },
   generateFileName () {
     return `${_.capitalize(util.mode)} (${moment().format('MMM Do YY, HH-mm')}).csv`
   },
