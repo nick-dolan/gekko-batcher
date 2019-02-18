@@ -62,7 +62,7 @@ After all the above you can start tools by running one of the following in your 
 
 `node bruteforce -c config.js` – to start Bruteforce Searcher
 
-`node importer -c config.js` –  to start Importer
+`node import -c config.js` –  to start Importer
 
 ---
 

@@ -113,7 +113,7 @@ const importer = {
           isRequired: true
         }
 
-        log('New value "from" is:', importFrom, moment.utc(importFrom, 'X').format('YYYY-MM-DD HH:mm'))
+        log('New value "from" is:', moment.utc(importFrom, 'X').format('YYYY-MM-DD HH:mm'))
       }
       /*
       * If the already imported data range overlaps the specified range from rigth
@@ -126,7 +126,7 @@ const importer = {
           importTo: importTo,
           isRequired: true
         }
-        log('New value "to" is:', importTo, moment.utc(importTo, 'X').format('YYYY-MM-DD HH:mm'))
+        log('New value "to" is:', moment.utc(importTo, 'X').format('YYYY-MM-DD HH:mm'))
       }
     })
 
