@@ -164,7 +164,15 @@ async function listenImports (currentImport, config) {
 
       const msgSubscription = importMessageObservable.subscribe((message) => {
         if (message.import_id === currentImport.id) {
-          if (firstLaunch) {
+          if (firstLaunch && message.updates.done === true) {
+            log(chalk.cyanBright(`Import of ${_.capitalize(config.watch.exchange)} ${config.watch.currency}/${config.watch.asset} started`))
+            log(chalk.cyanBright(`From ${config.importer.daterange.from} to ${config.importer.daterange.to}`))
+
+            bar.update(0.99)
+
+            firstLaunch = false
+          }
+          else if (firstLaunch) {
             log(chalk.cyanBright(`Import of ${_.capitalize(config.watch.exchange)} ${config.watch.currency}/${config.watch.asset} started`))
             log(chalk.cyanBright(`From ${config.importer.daterange.from} to ${config.importer.daterange.to}`))
             firstLaunch = false
