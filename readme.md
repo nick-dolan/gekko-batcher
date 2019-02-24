@@ -69,3 +69,9 @@ After all the above you can start tools by running one of the following in your 
 You can find results in the results folder after backtests.
 
 [Sample file output](https://github.com/nicolay-zlobin/gekko-batcher/blob/master/sample_results.csv)
+
+## Contributing
+
+Pull requests and stars are highly welcome.
+
+For bugs and feature requests, please [create an issue](https://github.com/nicolay-zlobin/gekko-batcher/issues/new).
