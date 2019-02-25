@@ -6,6 +6,8 @@ The results appear in a CSV report file. It provides key statistics describing t
 
 It uses [Gekko's API](https://gekko.wizb.it/docs/internals/server_api.html#POST-api-backtest), one gekko instance running required only.
 
+![](https://user-images.githubusercontent.com/25667028/53367299-d0872800-3956-11e9-9e09-d291e3b6e851.gif)
+
 #### Tools
 
 - Backtest Batcher – batch backtest tool for multiple strategies and pairs.
