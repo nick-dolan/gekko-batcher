@@ -47,8 +47,7 @@ It uses [Gekko's API](https://gekko.wizb.it/docs/internals/server_api.html#POST-
 
 Additional:
 
-1. Set `config.debug = true` at `/gekko/web/routes/baseConfig.js` for better performance.
-2. Increase `server.timeout` at `/gekko/web/server.js` to avoid a timeout error if the strategy runs for a long time. For example, this happens for small sized candles.
+Increase `server.timeout` at `/gekko/web/server.js` to avoid a timeout error if the strategy runs for a long time. For example, this happens for small sized candles.
 
 #### **In Batcher's folder**  
 
@@ -68,9 +67,11 @@ After all the above you can start tools by running one of the following in your 
 
 ---
 
-You can find results in the results folder after backtests.
+You can find results in the results folder after backtests. Take a look of [Sample file output](https://github.com/nicolay-zlobin/gekko-batcher/blob/master/sample_results.csv)
 
-[Sample file output](https://github.com/nicolay-zlobin/gekko-batcher/blob/master/sample_results.csv)
+:movie_camera: [Gekko Trading Bot - Gekko Batcher - YouTube](https://www.youtube.com/watch?v=RaIP44PQstw) – watch a video review of these tools.
+
+---
 
 ## Contributing
 
