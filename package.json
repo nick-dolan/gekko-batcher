@@ -4,7 +4,9 @@
   "description": "Backtest batcher for Gekko",
   "main": "bruteforce.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "batch": "node batch.js -c config.js",
+    "brut": "node bruteforce.js -c config.js",
+    "i": "node import.js -c config.js"
   },
   "repository": {
     "type": "git",

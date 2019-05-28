@@ -20,6 +20,7 @@ let strategyConfigs = configsGenerator.generateAllBruteforceCombinations(combs)
 let gekkoConfigs = configsGenerator.getAllBacktestRequestConfigs(strategyConfigs)
 let fileName = util.generateFileName()
 
+console.log('Method:', util.config.method)
 info.initMessage(gekkoConfigs.length)
 
 const csvStream = csv.createWriteStream({ headers: true })

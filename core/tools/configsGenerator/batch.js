@@ -25,7 +25,16 @@ const batch = {
                 daterange: daterange
               }
 
-              option[method] = methodConfigs[method].settings
+              option[method] = methodConfigs[method].settings || {
+                // If there's no settings put default data about the strategy
+                name: config.name,
+                method: method,
+                historySize: historySize,
+                candleSize: candleSize,
+                daterange: daterange,
+                exchange: tradingPair[0],
+                tradingPair: `${tradingPair[1]}/${tradingPair[2]}`
+              }
 
               options.push(option)
             })
