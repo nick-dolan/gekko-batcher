@@ -12,7 +12,7 @@ const moment = require('moment')
 const ProgressBar = require('ascii-progress')
 
 /*
-* Observable with Proxy inside for message listenning
+* Observable with Proxy inside for message listening
 * */
 let proxyMessage = { message: {} }
 
@@ -121,7 +121,7 @@ async function asyncImports (config) {
   try {
     let startedImportID = await postImport(config)
 
-    let completedImport = await listenImports(startedImportID, config)
+    await listenImports(startedImportID, config)
   } catch (err) {
     util.errorHandler(err)
   }
@@ -153,7 +153,7 @@ function countProgressOfImport (from, to, latest) {
 * */
 async function listenImports (currentImport, config) {
   return new Promise(
-    (resolve, reject) => {
+    (resolve) => {
       let from = moment.utc(config.importer.daterange.from)
       let to = moment.utc(config.importer.daterange.to)
       let bar = new ProgressBar({
@@ -171,8 +171,7 @@ async function listenImports (currentImport, config) {
             bar.update(0.99)
 
             firstLaunch = false
-          }
-          else if (firstLaunch) {
+          } else if (firstLaunch) {
             log(chalk.cyanBright(`Import of ${_.capitalize(config.watch.exchange)} ${config.watch.currency}/${config.watch.asset} started`))
             log(chalk.cyanBright(`From ${config.importer.daterange.from} to ${config.importer.daterange.to}`))
             firstLaunch = false
