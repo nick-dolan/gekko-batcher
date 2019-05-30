@@ -78,6 +78,15 @@ const importer = {
     return readyConfig
   },
   /*
+  * Subtract or add some hours
+  * action: add or subtract
+  * timeUnit: months, hours, days
+  * output: unix timestamp
+  * */
+  mutateDate (unixTimestamp, action, timeUnit, value) {
+    return moment.utc(unixTimestamp, 'X')[action](value, timeUnit).format('X')
+  },
+  /*
   * A preliminary check of datasets (compare given ranges with already downloaded)
   * */
   checkRange (importFrom, importTo, importedRanges) {
@@ -85,6 +94,16 @@ const importer = {
       importFrom: importFrom,
       importTo: importTo,
       isRequired: true
+    }
+
+    const now = moment().utc().format('X')
+
+    if (importedRanges.length === 0) {
+      updatedRange = {
+        importFrom: this.mutateDate(importFrom, 'subtract', 'hours', 2),
+        importTo: this.mutateDate(importTo, 'add', 'hours', 2),
+        isRequired: true
+      }
     }
 
     _.each(importedRanges, (imported) => {
@@ -99,36 +118,63 @@ const importer = {
       * If the already imported range is not within the specified range
       * */
       else if ((importFrom >= imported.to && importTo >= imported.from) || (importTo <= imported.from && importTo <= imported.to)) {
-        _.noop()
+        updatedRange = {
+          importFrom: this.mutateDate(importFrom, 'subtract', 'hours', 2),
+          importTo: this.mutateDate(importTo, 'add', 'hours', 2),
+          isRequired: true
+        }
       }
       /*
-      * If the already imported data range overlaps the specified range from left
+      * If the already imported data range overlaps the specified range (from)
+      *                            |-----------New request----------|
+      *                            |xxxxx|
+      * |~~~~~~~~Already imported~~~~~~~~|
       * */
       else if (importFrom >= imported.from && importFrom < imported.to) {
+        log('The already imported data range overlaps the specified range. Calculated new value "from".')
+
         importFrom = imported.to
 
         updatedRange = {
-          importFrom: importFrom,
-          importTo: importTo,
+          importFrom: this.mutateDate(importFrom, 'subtract', 'hours', 2),
+          importTo: this.mutateDate(importTo, 'add', 'hours', 2),
           isRequired: true
         }
-
-        log('New value "from" is:', moment.utc(importFrom, 'X').format('YYYY-MM-DD HH:mm'))
       }
       /*
-      * If the already imported data range overlaps the specified range from rigth
+      * If the already imported data range overlaps the specified range (to)
+      * |-----------New request----------|
+      *                            |xxxxx|
+      *                            |~~~~~~~~Already imported~~~~~~~~|
       * */
       else if (importTo > imported.from && importTo <= imported.to) {
+        log('The already imported data range overlaps the specified range. Calculated new value "to".')
         importTo = imported.from
 
         updatedRange = {
-          importFrom: importFrom,
-          importTo: importTo,
+          importFrom: this.mutateDate(importFrom, 'subtract', 'hours', 2),
+          importTo: this.mutateDate(importTo, 'add', 'hours', 2),
           isRequired: true
         }
-        log('New value "to" is:', moment.utc(importTo, 'X').format('YYYY-MM-DD HH:mm'))
+      }
+      /*
+      * The already imported data will not affect the new
+      * */
+      else {
+        log('The already imported data will not affect the new request')
+
+        updatedRange = {
+          importFrom: this.mutateDate(importFrom, 'subtract', 'hours', 2),
+          importTo: this.mutateDate(importTo, 'add', 'hours', 2),
+          isRequired: true
+        }
       }
     })
+
+    // If importTo is bigger than now set now
+    if (updatedRange.importTo > now) {
+      updatedRange.importTo = now
+    }
 
     return updatedRange
   }
