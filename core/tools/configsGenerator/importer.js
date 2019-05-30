@@ -63,6 +63,10 @@ const importer = {
         log(`No import is required for specified range: ${config.exchange}, ${config.currency}/${config.asset}`)
         log(`From ${moment.utc(updatedRange.importFrom, 'X').format('YYYY-MM-DD HH:mm')} to ${moment.utc(updatedRange.importTo, 'X').format('YYYY-MM-DD HH:mm')}`)
       } else {
+        if (updatedRange.mutatedDate) {
+          log(`The already imported data range overlaps specified range: ${_.upperFirst(config.exchange)}, ${config.currency}/${config.asset}. Calculated new value "${updatedRange.mutatedDate}".`)
+        }
+
         let configForImport = this.getImportRequestConfig({
           exchange: config.exchange,
           currency: config.currency,
@@ -93,17 +97,15 @@ const importer = {
     let updatedRange = {
       importFrom: importFrom,
       importTo: importTo,
-      isRequired: true
+      isRequired: true,
+      mutatedDate: ''
     }
 
     const now = moment().utc().format('X')
 
     if (importedRanges.length === 0) {
-      updatedRange = {
-        importFrom: this.mutateDate(importFrom, 'subtract', 'hours', 2),
-        importTo: this.mutateDate(importTo, 'add', 'hours', 2),
-        isRequired: true
-      }
+      updatedRange.importFrom = this.mutateDate(importFrom, 'subtract', 'hours', 2)
+      updatedRange.importTo = this.mutateDate(importTo, 'add', 'hours', 2)
     }
 
     _.each(importedRanges, (imported) => {
@@ -118,11 +120,8 @@ const importer = {
       * If the already imported range is not within the specified range
       * */
       else if ((importFrom >= imported.to && importTo >= imported.from) || (importTo <= imported.from && importTo <= imported.to)) {
-        updatedRange = {
-          importFrom: this.mutateDate(importFrom, 'subtract', 'hours', 2),
-          importTo: this.mutateDate(importTo, 'add', 'hours', 2),
-          isRequired: true
-        }
+        updatedRange.importFrom = this.mutateDate(importFrom, 'subtract', 'hours', 2)
+        updatedRange.importTo = this.mutateDate(importTo, 'add', 'hours', 2)
       }
       /*
       * If the already imported data range overlaps the specified range (from)
@@ -131,15 +130,11 @@ const importer = {
       * |~~~~~~~~Already imported~~~~~~~~|
       * */
       else if (importFrom >= imported.from && importFrom < imported.to) {
-        log('The already imported data range overlaps the specified range. Calculated new value "from".')
-
         importFrom = imported.to
 
-        updatedRange = {
-          importFrom: this.mutateDate(importFrom, 'subtract', 'hours', 2),
-          importTo: this.mutateDate(importTo, 'add', 'hours', 2),
-          isRequired: true
-        }
+        updatedRange.importFrom = this.mutateDate(importFrom, 'subtract', 'hours', 2)
+        updatedRange.importTo = this.mutateDate(importTo, 'add', 'hours', 2)
+        updatedRange.mutatedDate = 'from'
       }
       /*
       * If the already imported data range overlaps the specified range (to)
@@ -148,26 +143,18 @@ const importer = {
       *                            |~~~~~~~~Already imported~~~~~~~~|
       * */
       else if (importTo > imported.from && importTo <= imported.to) {
-        log('The already imported data range overlaps the specified range. Calculated new value "to".')
         importTo = imported.from
 
-        updatedRange = {
-          importFrom: this.mutateDate(importFrom, 'subtract', 'hours', 2),
-          importTo: this.mutateDate(importTo, 'add', 'hours', 2),
-          isRequired: true
-        }
+        updatedRange.importFrom = this.mutateDate(importFrom, 'subtract', 'hours', 2)
+        updatedRange.importTo = this.mutateDate(importTo, 'add', 'hours', 2)
+        updatedRange.mutatedDate = 'to'
       }
       /*
       * The already imported data will not affect the new
       * */
       else {
-        log('The already imported data will not affect the new request')
-
-        updatedRange = {
-          importFrom: this.mutateDate(importFrom, 'subtract', 'hours', 2),
-          importTo: this.mutateDate(importTo, 'add', 'hours', 2),
-          isRequired: true
-        }
+        updatedRange.importFrom = this.mutateDate(importFrom, 'subtract', 'hours', 2)
+        updatedRange.importTo = this.mutateDate(importTo, 'add', 'hours', 2)
       }
     })
 
