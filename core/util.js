@@ -93,7 +93,7 @@ const util = {
     return url.replace(/^(https?:|)\/\//, '')
   },
   generateFileName () {
-    return `${_.capitalize(util.mode)} (${moment().format('MMM Do YY, HH-mm')}).csv`
+    return `${this.config.name ? this.config.name + ' ' : ''}${_.capitalize(util.mode)} (${moment().format('MMM Do YY, HH-mm')}).csv`
   },
   errorHandler (err) {
     if (err.code === 'ECONNREFUSED') {
