@@ -23,15 +23,22 @@ let fileName = util.generateFileName()
 console.log('Method:', util.config.method)
 info.initMessage(gekkoConfigs.length)
 
-const csvStream = csv.createWriteStream({ headers: true })
-const writableStream = fs.createWriteStream(`${util.dirs().results}/${fileName}`)
+let csvStream
+let writableStream
 
-csvStream.pipe(writableStream)
+if (util.config.saveToCsv) {
+  csvStream = csv.createWriteStream({ headers: true })
+  writableStream = fs.createWriteStream(`${util.dirs().results}/${fileName}`)
+
+  csvStream.pipe(writableStream)
+}
 
 async.mapLimit(gekkoConfigs, util.config.parallelQueries, runBacktest, (err) => {
   if (err) throw err
 
-  csvStream.end()
+  if (util.config.saveToCsv) {
+    csvStream.end()
+  }
 
   info.finishMessage(fileName)
 })
@@ -53,11 +60,13 @@ async function runBacktest (config) {
       if (!_.isEmpty(performanceReport)) {
         info.successfulBacktests++
 
-        row = resultsHandler.prepareCsvRow(response.data)
+        if (util.config.saveToCsv) {
+          row = resultsHandler.prepareCsvRow(response.data)
+          csvStream.write(row)
+        }
+
         info.spentTime += marky.stop(backtestId).duration
         info.completeBacktest(config)
-
-        csvStream.write(row)
       } else {
         info.failureBacktests++
         info.spentTime += marky.stop(backtestId).duration

@@ -7,6 +7,9 @@ const config = {}
 // Name of batch (will show up in generated csv's file name )
 config.name = 'My'
 
+// Save results to csv
+config.saveToCsv = true
+
 config.gekkoPath = '../gekko/'
 config.gekkoConfigFileName = 'config.js'
 
