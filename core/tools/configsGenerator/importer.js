@@ -64,7 +64,7 @@ const importer = {
         log(`From ${moment.utc(updatedRange.importFrom, 'X').format('YYYY-MM-DD HH:mm')} to ${moment.utc(updatedRange.importTo, 'X').format('YYYY-MM-DD HH:mm')}`)
       } else {
         if (updatedRange.mutatedDate) {
-          log(`The already imported data range overlaps specified range: ${_.upperFirst(config.exchange)}, ${config.currency}/${config.asset}. Calculated new value "${updatedRange.mutatedDate}".`)
+          log(`The already imported data range overlaps: ${_.upperFirst(config.exchange)}, ${config.currency}/${config.asset}. Calculated new "${updatedRange.mutatedDate}".`)
         }
 
         let configForImport = this.getImportRequestConfig({
