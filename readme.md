@@ -16,7 +16,7 @@ It uses [Gekko's API](https://gekko.wizb.it/docs/internals/server_api.html#POST-
 
 #### You can set up multiple…
 
-Strategies / Trading Pairs / Candle sizes / History sizes / Dateranges /Range of strategy config's parameters (BruteForce)
+Strategies / Trading Pairs / Candle sizes / History sizes / Dateranges / Range of strategy config's parameters (BruteForce)
 
 #### Features
 
@@ -66,7 +66,7 @@ You can find results in the results folder after backtests. Take a look of [Samp
 
 :movie_camera: [Gekko Trading Bot - Gekko Batcher - YouTube](https://www.youtube.com/watch?v=RaIP44PQstw) – watch a video review of these tools.
 
-:spiral_notepad: [RU] https://teoway.com/gekko-batcher-testirovanie-i-optimizatsiya-torgovyh-strategij/
+:spiral_notepad: [RU] [Gekko-batcher — тестирование и оптимизация торговых стратегий](https://teoway.com/gekko-batcher-testirovanie-i-optimizatsiya-torgovyh-strategij/)
 
 ---
 
