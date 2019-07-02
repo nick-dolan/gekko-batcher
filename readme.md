@@ -10,18 +10,13 @@ It uses [Gekko's API](https://gekko.wizb.it/docs/internals/server_api.html#POST-
 
 #### Tools
 
-- Backtest Batcher – batch backtest tool for multiple strategies and pairs.
-- Bruteforce Searcher – run all possible parameter combinations for specific method with given ranges for strategy optimization.
+- Batcher – batch backtest tool for multiple strategies and pairs.
+- Bruteforce – run all possible parameter combinations for specific method with given ranges for strategy optimization.
 - Importer – allow you to import multiple datasets thick and fast
 
 #### You can set up multiple…
 
-- Strategies
-- Trading Pairs
-- Candle sizes
-- History sizes
-- Dateranges
-- Range of strategy config's paraments (BruteForce)
+Strategies / Trading Pairs / Candle sizes / History sizes / Dateranges /Range of strategy config's parameters (BruteForce)
 
 #### Features
 
@@ -49,7 +44,7 @@ Additional:
 
 Increase `server.timeout` at `/gekko/web/server.js` to avoid a timeout error if the strategy runs for a long time. For example, this happens for small sized candles.
 
-#### **In Batcher's folder**  
+#### **In Batcher's folder**
 
 1. `npm install`
 2. `cp sample-config.js config.js` – don't forget to create config file as well.
@@ -59,9 +54,9 @@ Increase `server.timeout` at `/gekko/web/server.js` to avoid a timeout error if 
 
 After all the above you can start tools by running one of the following in your terminal:
 
-`node batch -c config.js` – to start Backtest Batcher
+`node batch -c config.js` – to start Batcher
 
-`node bruteforce -c config.js` – to start Bruteforce Searcher
+`node bruteforce -c config.js` – to start Bruteforce
 
 `node import -c config.js` –  to start Importer
 
@@ -71,10 +66,12 @@ You can find results in the results folder after backtests. Take a look of [Samp
 
 :movie_camera: [Gekko Trading Bot - Gekko Batcher - YouTube](https://www.youtube.com/watch?v=RaIP44PQstw) – watch a video review of these tools.
 
+:spiral_notepad: [RU] https://teoway.com/gekko-batcher-testirovanie-i-optimizatsiya-torgovyh-strategij/
+
 ---
 
 ## Contributing
 
-Pull requests and stars are highly welcome.
+Forks and stars are highly welcome.
 
 For bugs and feature requests, please [create an issue](https://github.com/nicolay-zlobin/gekko-batcher/issues/new).
