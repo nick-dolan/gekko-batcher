@@ -27,7 +27,7 @@
   "dependencies": {
     "ascii-progress": "^1.0.5",
     "async": "^2.6.1",
-    "axios": "^0.18.1",
+    "axios": "^0.21.1",
     "chalk": "^2.4.1",
     "combos": "^0.2.0",
     "commander": "^2.19.0",
